@@ -1,0 +1,199 @@
+<div *ngIf="mode === 'create'; else edit">
+
+  <p-card header="New inspection plan" [style]="{width:'600px'}">
+    <a [routerLink]='["/"]'>
+      <i class="pi pi-chevron-left"></i> Back to inspection list
+    </a>
+
+    <form [formGroup]="planForm" (ngSubmit)="createPlan()">
+      <div class="p-grid">
+        <div class="p-col-12">
+          <p>Inspection plan title</p>
+          <input type="text" pInputText formControlName="title" style="width:100%" />
+        </div>
+        <div class="p-col-12">
+          <p>Select vehicles</p>
+          <mat-divider></mat-divider>
+          <span *ngFor="let vehicle of vehicles">
+            <div class="p-grid p-justify-between" style="padding:10px 0">
+              <div class="p-col-8">
+                <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
+                  label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
+                </p-checkbox>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </span>
+        </div>
+        <div class="p-col-12">
+          <p>Select inspection plan items</p>
+          <mat-divider></mat-divider>
+          <span *ngFor="let item of items">
+            <div class="p-grid p-justify-between" style="padding:10px 0">
+              <div class="p-col-8">
+                <p-checkbox [formControl]="planForm.controls['items']" value="{{item._id}}" label="{{item.title}}">
+                </p-checkbox>
+              </div>
+              <div class="p-col-2 text-right">
+                <i class="pi pi-pencil" (click)="showUpdatedItem(item._id)" style="cursor: pointer"></i>
+                <i class="pi pi-times" (click)="deleteItem(item._id)" style="cursor: pointer"></i>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </span>
+        </div>
+        <div class="p-col-12 text-right">
+          <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
+            (click)="showCreateDialog()">
+          </p-button>
+        </div>
+        <div class="p-col-12">
+          <p>Frequency of inspection plan</p>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By time" label="By time" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By mileage" label="By mileage" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By engine hours" label="By engine hours" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <div class="p-col-12 text-right">
+          <button pButton type="submit" label="Save"></button>
+        </div>
+      </div>
+    </form>
+  </p-card>
+
+
+  <p-toast position="top-right"></p-toast>
+</div>
+
+<!-- ------------------------------------------------------------------------------------------------------- -->
+<ng-template #edit>
+  <p-card header="{{plan.title}}" [style]="{width:'600px'}" *ngIf="selectedItems.length">
+    <a [routerLink]='["/"]'>
+      <i class="pi pi-chevron-left"></i> Back to inspection list
+    </a>
+    <form [formGroup]="planForm" (ngSubmit)="updatePlan(plan._id)">
+      <div class="p-grid">
+        <div class="p-col-12">
+          <p>Inspection plan title</p>
+          <input type="text" pInputText formControlName="title" style="width:100%" />
+        </div>
+        <div class="p-col-12">
+          <p>Select vehicles</p>
+          <mat-divider></mat-divider>
+          <span *ngFor="let vehicle of vehicles">
+            <div class="p-grid p-justify-between" style="padding:10px 0">
+              <div class="p-col-8">
+                <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
+                  label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
+                </p-checkbox>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </span>
+        </div>
+        <div class="p-col-12">
+          <p>Select inspection plan items</p>
+          <mat-divider></mat-divider>
+          <span *ngFor="let item of items">
+            <div class="p-grid p-justify-between" style="padding:10px 0">
+              <div class="p-col-8">
+                <p-checkbox [formControl]="planForm.controls['items']" value="{{item._id}}" label="{{item.title}}"
+                  [(ngModel)]="selectedItems">
+                </p-checkbox>
+              </div>
+              <div class="p-col-2 text-right">
+                <i class="pi pi-pencil" (click)="showUpdatedItem(item._id)" style="cursor: pointer"></i>
+                <i class="pi pi-times" (click)="deleteItem(item._id)" style="cursor: pointer"></i>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </span>
+        </div>
+        <div class="p-col-12 text-right">
+          <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
+            (click)="showCreateDialog()">
+          </p-button>
+        </div>
+        <div class="p-col-12">
+          <p>Frequency of inspection plan</p>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By time" label="By time" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By mileage" label="By mileage" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <div class="p-col-12">
+            <p-radioButton name="frequency" value="By engine hours" label="By engine hours" formControlName="frequency">
+            </p-radioButton>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <div class="p-col-8"></div>
+        <div class="p-col-2 text-right"> <button class="ui-button-secondary" pButton type="button" label="Delete"
+            style="width:100%" (click)="deletePlan(plan._id)"></button>
+        </div>
+        <div class="p-col-2 text-right">
+          <button pButton type="submit" label="Save" style="width:100%"></button>
+        </div>
+      </div>
+    </form>
+  </p-card>
+  <p-toast position="top-right"></p-toast>
+</ng-template>
+
+<p-dialog header="{{item?.title}}" [(visible)]="editDisplay" modal="true" [style]="{width: '600px'}">
+  <form [formGroup]="itemForm" id="itemForm" (ngSubmit)="updateItem(item._id)">
+    <div class="ui-g">
+      <div class="ui-g-6">Inspection item title</div>
+      <div class="ui-g-6">
+        <input type="text" pInputText formControlName="title" style="width:100%" />
+      </div>
+      <div class="ui-g-6">Instruction</div>
+      <div class="ui-g-6">
+        <textarea pInputTextarea formControlName="instruction" [rows]="12" style="width:100%">
+            </textarea>
+      </div>
+      <div>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div>
+      <button pButton type="submit" form="itemForm" label="Save"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="New inspection item" [(visible)]="createDisplay" modal="true" [style]="{width: '600px'}">
+  <form [formGroup]="itemForm" id="newitemForm" (ngSubmit)="createItem()">
+    <div class="ui-g">
+      <div class="ui-g-6">Inspection item title</div>
+      <div class="ui-g-6">
+        <input type="text" pInputText formControlName="title" style="width:100%" />
+      </div>
+      <div class="ui-g-6">Instruction</div>
+      <div class="ui-g-6">
+        <textarea pInputTextarea formControlName="instruction" [rows]="12" style="width:100%">
+              </textarea>
+      </div>
+      <div>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div>
+      <button pButton type="submit" form="newitemForm" label="Save"></button>
+    </div>
+  </p-footer>
+</p-dialog>

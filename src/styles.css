@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.center {
+  margin:auto;
+}
+
+.mat-divider {
+  color: lightgray;
+}
+
+.p-grid {
+  margin-top: 0 !important;
+}
+
+p {
+  margin-bottom: 1rem !important;
+}
