@@ -28,6 +28,9 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { PanelModule } from 'primeng/panel';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 
@@ -67,7 +70,10 @@ import { PanelModule } from 'primeng/panel';
     SharedModule,
     ToastModule,
     RadioButtonModule,
-    PanelModule
+    PanelModule,
+    ScrollPanelModule,
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]

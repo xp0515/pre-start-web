@@ -13,6 +13,10 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 })
 export class NewPlanComponent implements OnInit {
 
+  isLoading: Boolean = true;
+  timeDisabled = false;
+  mileageDisabled = false;
+  hourDisabled = false;
   planForm: FormGroup;
   items: Item[] = [];
   plans: Plan[] = [];
@@ -27,6 +31,14 @@ export class NewPlanComponent implements OnInit {
   selectedItems = [];
   vehicles: Vehicle[] = [];
   selectedVehicles = [];
+  selectedFrequency = '';
+  timeOptions = [
+    { label: 'Show all the time', value: 'Show all the time' },
+    { label: 'Daily', value: 'Daily' },
+    { label: 'Weekly', value: 'Weekly' },
+    { label: 'Monthly', value: 'Monthly' },
+    //{ label: 'Custom period', value: 'Some value' },
+  ];
 
   constructor(private fb: FormBuilder,
     public inspectionService: InspectionService,
@@ -55,11 +67,33 @@ export class NewPlanComponent implements OnInit {
             this.selectedVehicles.push(vehicle._id);
           }
           this.planForm.get('title').setValue(this.plan.title);
-          this.planForm.get('frequency').setValue(this.plan.frequency);
+          const frequency = this.plan.frequency;
+          if (frequency.includes(' kms')) {
+            this.selectedFrequency = 'by mileage';
+            // document.addEventListener('DOMContentLoaded', function (event) {
+            //   (<HTMLInputElement>document.getElementById('byTimeButton')).disabled = true;
+            //   console.log(1);
+            // });
+            this.timeDisabled = true;
+            this.hourDisabled = true;
+            this.planForm.get('frequency').setValue(frequency.split(' ')[1]);
+          } else if (frequency.includes(' hours')) {
+            this.timeDisabled = true;
+            this.mileageDisabled = true;
+            this.selectedFrequency = 'by engine hours';
+            this.planForm.get('frequency').setValue(frequency.split(' ')[1]);
+          } else {
+            this.mileageDisabled = true;
+            this.hourDisabled = true;
+            this.selectedFrequency = 'by time';
+            this.planForm.get('frequency').setValue(this.plan.frequency);
+          }
+          this.isLoading = false;
         });
       } else {
         this.mode = 'create';
         this.planId = null;
+        this.isLoading = false;
       }
     });
     this.planForm = this.fb.group({
@@ -113,19 +147,23 @@ export class NewPlanComponent implements OnInit {
   }
 
   createPlan() {
-    console.log(this.planForm.value);
+    this.isLoading = true;
+    this.updateFrequency();
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
   }
 
   updatePlan(id) {
+    this.isLoading = true;
+    this.updateFrequency();
     this.inspectionService.updatePlan(id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
   }
 
   deletePlan(id) {
+    this.isLoading = true;
     this.inspectionService.deletePlan(id).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -134,6 +172,14 @@ export class NewPlanComponent implements OnInit {
   showCreateDialog() {
     this.itemForm.reset();
     this.createDisplay = true;
+  }
+
+  updateFrequency() {
+    if (this.selectedFrequency === 'by mileage') {
+      this.planForm.get('frequency').setValue('Every ' + this.planForm.value.frequency + ' kms');
+    } else if (this.selectedFrequency === 'by engine hours') {
+      this.planForm.get('frequency').setValue('Every ' + this.planForm.value.frequency + ' hours');
+    }
   }
 
 }

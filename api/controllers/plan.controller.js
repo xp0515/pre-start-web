@@ -34,7 +34,6 @@ module.exports.updatePlan = (req, res, next) => {
     req.body,
     (err, plan) => {
       if (err) return res.status(500).send(err);
-      console.log(req.body);
       return res.send(plan);
     })
 }
@@ -42,7 +41,7 @@ module.exports.updatePlan = (req, res, next) => {
 module.exports.deletePlan = (req, res, next) => {
   Plan.findByIdAndDelete(req.params.id)
     .then(err => {
-      if (!err) {
+      if (err) {
         return res.status(404).send({
           message: "Plan not found with id " + req.params.id
         });
