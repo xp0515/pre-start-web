@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -9,17 +10,14 @@ import { Inspection, Vehicle, Plan, Item, User } from '../model';
 export class HomeComponent {
 
   inspectionModalDisplay = false;
-  inspectionPlanModalDisplay = false;
   inspectionCols = [
-    { field: 'inspectionId', header: 'ID' },
-    { field: 'result', header: 'Status' },
-    { field: 'vehicleId', header: 'Vehicle No.' },
-    { field: 'startTime', header: 'Inspection date' },
-    { field: 'odometer', header: 'Odometer' },
-    { field: 'performedBy', header: 'Performed by' },
-    { field: 'endTime', header: 'Duration' },
-    { field: 'inspectionPlanId', header: 'Inspection plan' },
-    { field: 'view', header: 'View' },
+    { field: 'plan.title', header: 'Inspection plan', width: '167px' },
+    { field: 'status', header: 'Status', width: '108px' },
+    { field: 'vehicle.rego', header: 'Vehicle', width: '108px' },
+    { field: 'startTime', header: 'Inspection date', width: '195px' },
+    { field: 'odometer', header: 'Odometer', width: '129px' },
+    { field: 'performedBy', header: 'Performed by', width: '150px' },
+    { field: 'duration', header: 'Duration', width: '120px' },
   ];
   planCols = [
     { field: 'title', header: 'Inspection plan title' },
@@ -33,40 +31,39 @@ export class HomeComponent {
   inspection: Inspection;
   plans: Plan[] = [];
   items: Item[] = [];
+  isLoading = true;
 
-  constructor(public inspectionService: InspectionService) { }
+  constructor(public inspectionService: InspectionService, private router: Router) { }
 
   // tslint:disable-next-line: use-life-cycle-interface
   ngOnInit() {
-    // this.inspectionService.getInspections()
-    //   .subscribe(res => {
-    //     this.inspections = res;
-    //   });
-    // this.vehicles = this.inspectionService.getVehicles();
-    // //this.inspections = this.inspectionService.getInspection();
-    // this.inspectionService.getPlans()
-    //   .subscribe(res => {
-    //     this.plans = res;
-    //   });
-    this.inspectionService.getPlans().subscribe(res => this.plans = res);
-    this.inspectionService.getItems().subscribe(res => this.items = res);
-
+    this.inspectionService.getInspections().subscribe(inspections => {
+      this.inspections = inspections;
+      this.inspectionService.getPlans().subscribe(plans => {
+        this.plans = plans;
+        this.inspectionService.getItems().subscribe(items => {
+          this.items = items;
+          this.isLoading = false;
+        });
+      });
+    });
   }
 
-  viewInspection(inspectionId) {
-    // const index = this.inspections.map(inspection => inspection.id).indexOf(inspectionId);
-    // this.inspection = this.inspections[index];
-    // this.inspectionModalDisplay = true;
+  viewInspection(inspection) {
+    this.inspection = inspection;
+    this.inspectionModalDisplay = true;
   }
 
-  getDuration(inspection) {
-    const startTime = new Date(inspection.startTime).getTime();
-    const endTime = new Date(inspection.endTime).getTime();
-    const diff = (endTime - startTime) / 1000;
-    return diff;
+  getFailCount(inspection) {
+    return inspection.result.filter(r => r.result === 'Pass').length;
   }
 
-
+  deleteInspection(id) {
+    this.inspectionService.deleteInspection(id).subscribe(() => {
+      this.inspectionModalDisplay = false;
+      this.inspectionService.getInspections().subscribe(res => this.inspections = res);
+    });
+  }
 }
 
 

@@ -70,10 +70,6 @@ export class NewPlanComponent implements OnInit {
           const frequency = this.plan.frequency;
           if (frequency.includes(' kms')) {
             this.selectedFrequency = 'by mileage';
-            // document.addEventListener('DOMContentLoaded', function (event) {
-            //   (<HTMLInputElement>document.getElementById('byTimeButton')).disabled = true;
-            //   console.log(1);
-            // });
             this.timeDisabled = true;
             this.hourDisabled = true;
             this.planForm.get('frequency').setValue(frequency.split(' ')[1]);

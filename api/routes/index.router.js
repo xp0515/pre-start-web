@@ -17,6 +17,7 @@ router.delete('/items/:id', itemController.deleteItem);
 
 //vehicle resource
 router.get('/vehicles', vehicleController.getVehicles);
+router.get('/vehicles/:id', vehicleController.getVehicle);
 router.post('/vehicle', vehicleController.postVehicle);
 
 //plan resource
@@ -25,5 +26,10 @@ router.get('/plans/:id', planController.getPlan);
 router.post('/plan', planController.postPlan);
 router.put('/plans/:id', planController.updatePlan);
 router.delete('/plans/:id', planController.deletePlan);
+
+//inspection resource
+router.get('/inspections', inspectionController.getInspections);
+router.get('/inspections/:id', inspectionController.getInspection);
+router.delete('/inspections/:id', inspectionController.deleteInspection);
 
 module.exports = router;

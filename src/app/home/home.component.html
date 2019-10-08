@@ -1,4 +1,6 @@
-<p-tabView>
+<p-progressSpinner *ngIf="isLoading"></p-progressSpinner>
+
+<p-tabView *ngIf="!isLoading">
   <p-tabPanel header="Inspections">
     <p>Select base</p>
     <p>Drop down list</p>
@@ -12,45 +14,51 @@
     </div>
 
     <p-table [columns]="inspectionCols" [value]="inspections" [responsive]="true" [autoLayout]="true"
-      sortMode="multiple">
+      sortField="startTime" sortOrder="-1">
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th class="text-center" *ngFor="let col of columns" [pSortableColumn]="col.field">
+          <th class="text-center" *ngFor="let col of columns" [pSortableColumn]="col.field"
+            [ngStyle]="{'min-width': col.width}">
             {{col.header}}
             <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
               ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order">
             </p-sortIcon>
           </th>
+          <th>View</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-inspection let-columns="columns">
         <tr>
           <td>
-            {{inspection.inspectionId}}
+            {{inspection.plan.title}}
           </td>
           <td>
-            {{inspection.result}}
+            <span *ngIf="inspection.status === 'Fail'">
+              <i class="fas fa-exclamation-triangle tomato" style="font-size: 1.09rem"></i>
+              {{getFailCount(inspection)}}/{{inspection.result.length}} Fail
+            </span>
+            <span *ngIf="inspection.status === 'Pass'">
+              <i class="fas fa-check-square limegreen" style="font-size: 1.4rem"></i>
+              {{inspection.result.length}}/{{inspection.result.length}} Pass
+            </span>
           </td>
           <td>
-            {{inspection.vehicleId}}
+            {{inspection.vehicle.rego}}
           </td>
           <td>
             {{inspection.startTime | date: 'medium'}}
           </td>
           <td>
-            {{inspection.odometer}}
+            {{inspection.odometer}} km
           </td>
           <td>
             {{inspection.performedBy}}
           </td>
           <td>
-            {{getDuration(inspection)}} s
-          </td>
-          <td>
-            {{inspection.inspectionPlanId}}
+            {{inspection.duration}} s
           </td>
           <td class="text-center">
-            <p-button label="View" (onClick)="viewInspection(inspection.inspectionId)">
+            <p-button label="View" (onClick)="viewInspection(inspection)">
             </p-button>
           </td>
 
@@ -109,22 +117,18 @@
   </p-tabPanel>
 </p-tabView>
 
-<!-- <p-dialog header="Inspection" [(visible)]="inspectionModalDisplay" [modal]="true" [style]="{width: '600px'}">
+<p-dialog header="Inspection" *ngIf="inspection" [(visible)]="inspectionModalDisplay" [modal]="true"
+  [style]="{width: '600px'}">
   <div class="ui-g">
     <div class="ui-g-6">
-      {{inspectionResults[0].vehicleId}}
+      <h5><i class="fa fa-car " aria-hidden="true"></i>
+        {{inspection.vehicle.rego}} ({{inspection.vehicle.make}} {{inspection.vehicle.model}})</h5>
     </div>
     <div class="ui-g-3 text-right">
-      <p-button label="{{inspectionResults[0].result}}"></p-button>
+      <p-button label="{{inspection.status}}"></p-button>
     </div>
-    <div class="ui-g-3">
+    <div class="ui-g-3 text-right">
       <p-button label="EXPORT (.PDF)"></p-button>
-    </div>
-  </div>
-  <div class="ui-g">
-    <div class="ui-g-6">
-      <p><i class="fa fa-car " aria-hidden="true"></i>
-        {{vehicles[0].rego}} ({{vehicles[0].make}} {{vehicles[0].model}})</p>
     </div>
   </div>
   <mat-divider></mat-divider>
@@ -134,100 +138,38 @@
     <div class="ui-g-4">Inspection location</div>
     <div class="ui-g-8">{{inspection.location}}</div>
     <div class="ui-g-4">Odometer</div>
-    <div class="ui-g-8">{{inspection.odometer}}</div>
+    <div class="ui-g-8">{{inspection.odometer}} km</div>
     <div class="ui-g-4">Inspection plan</div>
-    <div class="ui-g-8">{{inspection.inspectionPlanId}}</div>
+    <div class="ui-g-8">{{inspection.plan.title}}</div>
     <div class="ui-g-4">Result</div>
-    <div class="ui-g-8">{{inspection.result}}</div>
+    <div class="ui-g-8 limegreen" *ngIf="inspection.status === 'Pass'">
+      Pass {{inspection.result.length}}/{{inspection.result.length}}</div>
+    <div class="ui-g-8 tomato" *ngIf="inspection.status === 'Fail'">
+      Fail {{getFailCount(inspection)}}/{{inspection.result.length}}</div>
   </div>
   <mat-divider></mat-divider>
 
-  <div class="ui-g" *ngIf=inspectionResults[0].bodyCheckResult>
+  <div class="ui-g" *ngFor="let result of inspection.result">
     <div class="ui-g-3">
-      <span *ngIf="inspectionResults[0].bodyCheckResult === 'Pass'"><i class="pi pi-check"></i>
+      <span *ngIf="result.result === 'Pass'">
+        <i class="fas fa-check-square limegreen" style="font-size: 1.4rem"></i>
+        Pass
       </span>
-      <span *ngIf="inspectionResults[0].bodyCheckResult === 'Fail'"><i class="pi pi-info"></i>
+      <span *ngIf="result.result === 'Fail'">
+        <i class="fas fa-exclamation-triangle tomato" style="font-size: 1.09rem"></i>
+        Fail
       </span>
-      {{inspectionResults[0].bodyCheckResult}}
     </div>
-    <div class="ui-g-6">Body check <br />
-      {{inspectionResults[0].bodyCheckNote}}
+    <div class="ui-g-6">{{result.item.title}}
     </div>
     <div class="ui-g-3 text-right">
-      {{(inspectionResults[0].bodyCheckEnd - inspectionResults[0].bodyCheckStart) / 1000}}sec
+      {{result.duration}} sec
     </div>
   </div>
-  <mat-divider *ngIf=inspectionResults[0].bodyCheckResult></mat-divider>
-
-  <div class="ui-g" *ngIf=inspectionResults[0].engineOilCheckResult>
-    <div class="ui-g-3">
-      <span *ngIf="inspectionResults[0].engineOilCheckResult === 'Pass'"><i class="pi pi-check"></i>
-      </span>
-      <span *ngIf="inspectionResults[0].engineOilCheckResult === 'Fail'"><i class="pi pi-info"></i>
-      </span>
-      {{inspectionResults[0].engineOilCheckResult}}
-    </div>
-    <div class="ui-g-6">Engine oil check <br />
-      {{inspectionResults[0].engineOilCheckNote}}
-    </div>
-    <div class="ui-g-3 text-right">
-      {{(inspectionResults[0].engineOilCheckEnd - inspectionResults[0].engineOilCheckStart) / 1000}}sec
-    </div>
-  </div>
-  <mat-divider *ngIf=inspectionResults[0].engineOilCheckResult></mat-divider>
-
-  <div class="ui-g" *ngIf=inspectionResults[0].lightsCheckResult>
-    <div class="ui-g-3">
-      <span *ngIf="inspectionResults[0].lightsCheckResult === 'Pass'"><i class="pi pi-check"></i>
-      </span>
-      <span *ngIf="inspectionResults[0].lightsCheckResult === 'Fail'"><i class="pi pi-info"></i>
-      </span>
-      {{inspectionResults[0].lightsCheckResult}}
-    </div>
-    <div class="ui-g-6">Lights check <br />
-      {{inspectionResults[0].lightsCheckNote}}
-    </div>
-    <div class="ui-g-3 text-right">
-      {{(inspectionResults[0].lightsCheckEnd - inspectionResults[0].lightsCheckStart) / 1000}}sec
-    </div>
-  </div>
-  <mat-divider *ngIf=inspectionResults[0].lightsCheckResult></mat-divider>
-
-  <div class="ui-g" *ngIf=inspectionResults[0].petrolCheckResult>
-    <div class="ui-g-3">
-      <span *ngIf="inspectionResults[0].petrolCheckResult === 'Pass'"><i class="pi pi-check"></i>
-      </span>
-      <span *ngIf="inspectionResults[0].petrolCheckResult === 'Fail'"><i class="pi pi-info"></i>
-      </span>
-      {{inspectionResults[0].petrolCheckResult}}
-    </div>
-    <div class="ui-g-6">Petrol check <br />
-      {{inspectionResults[0].petrolCheckNote}}
-    </div>
-    <div class="ui-g-3 text-right">
-      {{(inspectionResults[0].petrolCheckEnd - inspectionResults[0].petrolCheckStart) / 1000}}sec
-    </div>
-  </div>
-  <mat-divider *ngIf=inspectionResults[0].petrolCheckResult></mat-divider>
-  <div class="ui-g" *ngIf=inspectionResults[0].carwashCheckResult>
-    <div class="ui-g-3">
-      <span *ngIf="inspectionResults[0].carwashCheckResult === 'Pass'"><i class="pi pi-check"></i>
-      </span>
-      <span *ngIf="inspectionResults[0].carwashCheckResult === 'Fail'"><i class="pi pi-info"></i>
-      </span>
-      {{inspectionResults[0].carwashCheckResult}}
-    </div>
-    <div class="ui-g-6">Carwash check <br />
-      {{inspectionResults[0].carwashCheckNote}}
-    </div>
-    <div class="ui-g-3 text-right">
-      {{(inspectionResults[0].carwashCheckEnd - inspectionResults[0].carwashCheckStart) / 1000}}sec
-    </div>
-  </div>
-  <mat-divider *ngIf=inspectionResults[0].carwashCheckResult></mat-divider>
+  <mat-divider></mat-divider>
 
   <div class="ui-g">
-    <div class="ui-g-6"> {{inspectionResults[0].petrolCheckEnd | date:'medium' }}
+    <div class="ui-g-6"> {{inspection.endTime | date:'medium' }}
     </div>
     <div class="ui-g-6 text-right">
       <div style="height: 300px">Signature
@@ -236,9 +178,13 @@
         {{inspection.performedBy}}
       </div>
     </div>
+    <div class="ui-g-6">
+    </div>
+    <div class="ui-g-3">
+    </div>
+    <div class="ui-g-3 text-right">
+      <button pButton type="button" class="ui-button-warning" label="DELETE"
+        (click)="deleteInspection(inspection._id)"></button>
+    </div>
   </div>
-</p-dialog> -->
-
-<p-dialog header="Inspection Plan" [(visible)]="inspectionPlanModalDisplay" [modal]="true" [style]="{width: '600px'}">
-
 </p-dialog>

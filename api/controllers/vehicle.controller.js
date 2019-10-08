@@ -8,6 +8,14 @@ module.exports.getVehicles = (req, res, next) => {
   })
 }
 
+module.exports.getVehicle = (req, res, next) => {
+  Vehicle.findById(req.params.id)
+    .exec((err, vehicle) => {
+      if (err) return res.status(500).send(err);
+      return res.status(200).send(vehicle);
+    })
+}
+
 module.exports.postVehicle = (req, res, next) => {
   let vehicle = new Vehicle(req.body);
   vehicle.save(err => {

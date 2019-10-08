@@ -41,7 +41,7 @@ module.exports.updatePlan = (req, res, next) => {
 module.exports.deletePlan = (req, res, next) => {
   Plan.findByIdAndDelete(req.params.id)
     .then(err => {
-      if (err) {
+      if (!err) {
         return res.status(404).send({
           message: "Plan not found with id " + req.params.id
         });

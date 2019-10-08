@@ -3,12 +3,21 @@ export class Inspection {
   plan: Plan;
   vehicle: Vehicle;
   status: string;
-  date: Date;
+  startTime: Date;
+  endTime: Date;
   odometer: number;
   performedBy: User;
   duration: number;
   location: string;
-  result: [{ item: Item, result: string, img: string }];
+  result: {
+    item: Item;
+    result: string;
+    note: string;
+    img: string;
+    startTime: Date;
+    endTime: Date;
+    duration: number;
+  }[];
 }
 
 export class Plan {
