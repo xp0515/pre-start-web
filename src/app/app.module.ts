@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { NewPlanComponent } from './new-plan/new-plan.component';
+import { InspectionComponent } from './inspection/inspection.component';
 
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
@@ -28,6 +29,7 @@ import { PanelModule } from 'primeng/panel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 
@@ -37,6 +39,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     NavMenuComponent,
     HomeComponent,
     NewPlanComponent,
+    InspectionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -45,7 +48,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'new-plan', component: NewPlanComponent },
-      { path: 'plans/:id', component: NewPlanComponent }
+      { path: 'plans/:id', component: NewPlanComponent },
+      { path: 'inspections/:id', component: InspectionComponent }
     ]),
     TabViewModule,
     TableModule,
@@ -65,7 +69,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     PanelModule,
     ScrollPanelModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    MultiSelectModule
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]

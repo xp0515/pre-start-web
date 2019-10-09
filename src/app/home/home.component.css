@@ -1,0 +1,23 @@
+.tomato-boarder {
+  border:1px solid tomato;
+  background-color: rgb(253, 246, 246);
+}
+
+.orange-boarder {
+  border: 1px solid orange;
+  background-color: rgb(253, 246, 246);
+}
+
+.limegreen-boarder {
+  border: 1px solid limegreen;
+  background-color: rgb(245, 252, 243);
+}
+
+.grey-boarder {
+  border: 1px solid #E6E6E6;
+}
+
+.spacer {
+  margin: 7px;
+  padding: 10px;
+}

@@ -15,7 +15,7 @@ module.exports.getInspection = (req, res, next) => {
   Inspection.findById(req.params.id)
     .populate('vehicle')
     .populate('plan')
-    .populate('item')
+    .populate('result.item')
     .exec((err, inspection) => {
       if (err) return res.status(500).send(err);
       return res.status(200).send(inspection);

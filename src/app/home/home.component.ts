@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
-import { Router } from '@angular/router';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
 
-  inspectionModalDisplay = false;
   inspectionCols = [
     { field: 'plan.title', header: 'Inspection plan', width: '167px' },
     { field: 'status', header: 'Status', width: '108px' },
@@ -31,14 +31,21 @@ export class HomeComponent {
   inspection: Inspection;
   plans: Plan[] = [];
   items: Item[] = [];
+  delayedCount; failedCount; repairedCount; passCount; completedCount: number;
+  planOptions; statusOptions; vehicleOptions; userOptions: SelectItem[];
   isLoading = true;
 
-  constructor(public inspectionService: InspectionService, private router: Router) { }
+  constructor(public inspectionService: InspectionService) { }
 
   // tslint:disable-next-line: use-life-cycle-interface
   ngOnInit() {
     this.inspectionService.getInspections().subscribe(inspections => {
       this.inspections = inspections;
+      this.delayedCount = this.inspections.filter(i => i.status === 'Delayed').length;
+      this.failedCount = this.inspections.filter(i => i.status === 'Fail').length;
+      this.repairedCount = this.inspections.filter(i => i.status === 'Repaired').length;
+      this.passCount = this.inspections.filter(i => i.status === 'Pass').length;
+      this.completedCount = this.inspections.filter(i => i.status === 'Completed').length;
       this.inspectionService.getPlans().subscribe(plans => {
         this.plans = plans;
         this.inspectionService.getItems().subscribe(items => {
@@ -47,23 +54,31 @@ export class HomeComponent {
         });
       });
     });
-  }
 
-  viewInspection(inspection) {
-    this.inspection = inspection;
-    this.inspectionModalDisplay = true;
+    this.statusOptions = [
+      { label: 'Pass', value: 'Pass' },
+      { label: 'Fail', value: 'Fail' },
+      { label: 'Repaired', value: 'Repaired' },
+      { label: 'Delayed', value: 'Delayed' },
+    ];
+
+    this.inspectionService.getPlans().subscribe(plans => {
+      this.planOptions = [];
+      plans.forEach(plan => this.planOptions.push({ label: plan.title, value: plan.title }));
+    });
+
+    this.inspectionService.getVehicles().subscribe(vehicles => {
+      this.vehicleOptions = [];
+      vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
+    });
+
+    //this.inspectionService.getUsers().subscribe();
   }
 
   getFailCount(inspection) {
     return inspection.result.filter(r => r.result === 'Pass').length;
   }
 
-  deleteInspection(id) {
-    this.inspectionService.deleteInspection(id).subscribe(() => {
-      this.inspectionModalDisplay = false;
-      this.inspectionService.getInspections().subscribe(res => this.inspections = res);
-    });
-  }
 }
 
 

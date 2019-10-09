@@ -40,7 +40,8 @@ export class NewPlanComponent implements OnInit {
     //{ label: 'Custom period', value: 'Some value' },
   ];
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     public inspectionService: InspectionService,
     private messageService: MessageService,
     public route: ActivatedRoute,

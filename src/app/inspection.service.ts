@@ -22,6 +22,10 @@ export class InspectionService {
     return this.http.get<Inspection[]>(this.url + 'inspections');
   }
 
+  getInpection(id) {
+    return this.http.get<Inspection>(this.url + 'inspections/' + id);
+  }
+
   deleteInspection(id) {
     return this.http.delete<Inspection>(this.url + 'inspections/' + id);
   }

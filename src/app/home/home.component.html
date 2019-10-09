@@ -2,19 +2,33 @@
 
 <p-tabView *ngIf="!isLoading">
   <p-tabPanel header="Inspections">
-    <p>Select base</p>
-    <p>Drop down list</p>
-    <p>Select vehicle group</p>
-    <p>Drop down list</p>
     <div class="p-grid">
-      <div class="p-col-12 p-md-6 p-lg-3">A</div>
-      <div class="p-col-12 p-md-6 p-lg-3">B</div>
-      <div class="p-col-12 p-md-6 p-lg-3">C</div>
-      <div class="p-col-12 p-md-6 p-lg-3">D</div>
+      <div class="p-col orange-boarder spacer">Delayed<br />
+        <h1 class="orange">32</h1>
+      </div>
+      <div class="p-col tomato-boarder spacer">Fail<br />
+        <h1 class="tomato">{{failedCount}}</h1>
+      </div>
+      <div class="p-col limegreen-boarder spacer">Repaired<br />
+        <h1 class="limegreen">{{repairedCount}}</h1>
+      </div>
+      <div class="p-col limegreen-boarder spacer">Pass<br />
+        <h1 class="limegreen">{{passCount}}</h1>
+      </div>
+      <div class="p-col grey-boarder spacer">Completed<br />
+        <h1>{{completedCount}}</h1>
+      </div>
     </div>
 
-    <p-table [columns]="inspectionCols" [value]="inspections" [responsive]="true" [autoLayout]="true"
-      sortField="startTime" sortOrder="-1">
+    <p-table #dt [columns]="inspectionCols" [value]="inspections" [responsive]="true" [autoLayout]="true"
+      sortField="startTime" sortOrder="-1" [paginator]="true" [rows]="10" [style]="{'margin-top': '20px'}">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="Global Filter"
+            (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+      </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th class="text-center" *ngFor="let col of columns" [pSortableColumn]="col.field"
@@ -25,6 +39,20 @@
             </p-sortIcon>
           </th>
           <th>View</th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.field">
+            <p-multiSelect *ngSwitchCase="'plan.title'" [options]="planOptions" defaultLabel="All Plans"
+              (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <p-multiSelect *ngSwitchCase="'status'" [options]="statusOptions" defaultLabel="All"
+              (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <p-multiSelect *ngSwitchCase="'vehicle.rego'" [options]="planOptions" defaultLabel="All"
+              (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <p-multiSelect *ngSwitchCase="'performedBy'" [options]="planOptions" defaultLabel="All Drivers"
+              (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+          </th>
+          <th>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-inspection let-columns="columns">
@@ -58,7 +86,7 @@
             {{inspection.duration}} s
           </td>
           <td class="text-center">
-            <p-button label="View" (onClick)="viewInspection(inspection)">
+            <p-button label="View" [routerLink]="['inspections', inspection._id]">
             </p-button>
           </td>
 
@@ -117,7 +145,7 @@
   </p-tabPanel>
 </p-tabView>
 
-<p-dialog header="Inspection" *ngIf="inspection" [(visible)]="inspectionModalDisplay" [modal]="true"
+<!-- <p-dialog header="Inspection" *ngIf="inspection" [(visible)]="inspectionModalDisplay" [modal]="true"
   [style]="{width: '600px'}">
   <div class="ui-g">
     <div class="ui-g-6">
@@ -187,4 +215,4 @@
         (click)="deleteInspection(inspection._id)"></button>
     </div>
   </div>
-</p-dialog>
+</p-dialog> -->
