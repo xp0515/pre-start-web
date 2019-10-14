@@ -7,7 +7,7 @@ const routes = require('./routes/index.router');
 const app = express();
 
 mongoose.connect('mongodb+srv://Peng:JCS6cs93gvVUY9VL@vehicleinspection-ff15g.mongodb.net/vehicleInspection?retryWrites=true&w=majority',
-  { useUnifiedTopology: true, useNewUrlParser: true })
+  { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
   .then(() => {
     console.log('Connected to Mongodb');
   })

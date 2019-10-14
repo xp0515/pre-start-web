@@ -1,0 +1,41 @@
+<p-progressSpinner *ngIf="isLoading"></p-progressSpinner>
+
+<div>
+  <div class="limiter">
+    <div class="container-login100">
+      <div class="wrap-login100">
+
+        <form class="login100-form" [formGroup]="loginForm" (submit)="onLogin()">
+          <div class="logo">
+          </div>
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" placeholder="Email" formControlName="email" />
+
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button type="submit" class="login100-form-btn">Sign In</button>
+          </div>
+
+          <div style="margin-top:10px">
+            <p-message severity="error" text="Invalid Email"
+              *ngIf="!loginForm?.controls['email'].valid&&loginForm?.controls['email'].dirty"></p-message>
+          </div>
+          <div style="margin-top:10px">
+            <p-message severity="error"
+              [text]="loginForm?.controls['password'].errors?.required ? 'Password is required' : loginForm?.controls['password'].errors?.minlength ? 'Must be longer than 4 characters' : ''"
+              *ngIf="!loginForm?.controls['password'].valid && loginForm?.controls['password'].dirty"></p-message>
+          </div>
+          <div style="margin-top:10px">
+            <p-message severity="error" [text]="errorMessage" *ngIf="errorMessage"></p-message>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

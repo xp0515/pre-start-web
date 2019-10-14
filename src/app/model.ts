@@ -51,3 +51,7 @@ export class User {
   vehicle: Vehicle;
 }
 
+export class AuthData {
+  email: string;
+  password: string;
+}

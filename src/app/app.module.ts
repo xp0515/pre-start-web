@@ -1,14 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { NewPlanComponent } from './new-plan/new-plan.component';
 import { InspectionComponent } from './inspection/inspection.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
@@ -30,7 +34,8 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MultiSelectModule } from 'primeng/multiselect';
-
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 
 @NgModule({
@@ -39,17 +44,20 @@ import { MultiSelectModule } from 'primeng/multiselect';
     NavMenuComponent,
     HomeComponent,
     NewPlanComponent,
-    InspectionComponent
+    InspectionComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'new-plan', component: NewPlanComponent },
-      { path: 'plans/:id', component: NewPlanComponent },
-      { path: 'inspections/:id', component: InspectionComponent }
+      { path: '', component: LoginComponent, pathMatch: 'full' },
+      { path: 'dashboard', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+      { path: 'new-plan', component: NewPlanComponent, canActivate: [AuthGuard] },
+      { path: 'plans/:id', component: NewPlanComponent, canActivate: [AuthGuard] },
+      { path: 'inspections/:id', component: InspectionComponent, canActivate: [AuthGuard] }
     ]),
     TabViewModule,
     TableModule,
@@ -70,9 +78,16 @@ import { MultiSelectModule } from 'primeng/multiselect';
     ScrollPanelModule,
     DropdownModule,
     ProgressSpinnerModule,
-    MultiSelectModule
+    MultiSelectModule,
+    MessagesModule,
+    MessageModule
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [
+    ConfirmationService,
+    MessageService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AuthGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
