@@ -33,6 +33,7 @@ export class NewPlanComponent implements OnInit {
   selectedVehicles = [];
   selectedFrequency = '';
   timeOptions = [
+    { label: '', value: '' },
     { label: 'Show all the time', value: 'Show all the time' },
     { label: 'Daily', value: 'Daily' },
     { label: 'Weekly', value: 'Weekly' },
@@ -68,22 +69,21 @@ export class NewPlanComponent implements OnInit {
             this.selectedVehicles.push(vehicle._id);
           }
           this.planForm.get('title').setValue(this.plan.title);
+          this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
+          this.planForm.get('frequency').get('note').setValue(this.plan.frequency.note);
           const frequency = this.plan.frequency;
-          if (frequency.includes(' kms')) {
+          if (frequency.type === 'by mileage') {
             this.selectedFrequency = 'by mileage';
             this.timeDisabled = true;
             this.hourDisabled = true;
-            this.planForm.get('frequency').setValue(frequency.split(' ')[1]);
-          } else if (frequency.includes(' hours')) {
+          } else if (frequency.type === 'by engine hours') {
             this.timeDisabled = true;
             this.mileageDisabled = true;
             this.selectedFrequency = 'by engine hours';
-            this.planForm.get('frequency').setValue(frequency.split(' ')[1]);
           } else {
             this.mileageDisabled = true;
             this.hourDisabled = true;
             this.selectedFrequency = 'by time';
-            this.planForm.get('frequency').setValue(this.plan.frequency);
           }
           this.isLoading = false;
         });
@@ -96,7 +96,10 @@ export class NewPlanComponent implements OnInit {
     this.planForm = this.fb.group({
       title: new FormControl('', Validators.required),
       items: new FormControl('', Validators.required),
-      frequency: new FormControl('', Validators.required),
+      frequency: this.fb.group({
+        type: new FormControl('', Validators.required),
+        note: new FormControl('', Validators.required)
+      }),
       vehicles: new FormControl(''),
       lastModified: new FormControl(Date.now())
     });
@@ -145,7 +148,7 @@ export class NewPlanComponent implements OnInit {
 
   createPlan() {
     this.isLoading = true;
-    this.updateFrequency();
+    //this.updateFrequency();
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -153,7 +156,7 @@ export class NewPlanComponent implements OnInit {
 
   updatePlan(id) {
     this.isLoading = true;
-    this.updateFrequency();
+    //this.updateFrequency();
     this.inspectionService.updatePlan(id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -177,6 +180,11 @@ export class NewPlanComponent implements OnInit {
     } else if (this.selectedFrequency === 'by engine hours') {
       this.planForm.get('frequency').setValue('Every ' + this.planForm.value.frequency + ' hours');
     }
+  }
+
+  resetFrequency() {
+    this.planForm.get('frequency').get('note').setValue('');
+    //console.log(this.planForm)
   }
 
 }

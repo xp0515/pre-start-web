@@ -22,6 +22,16 @@ module.exports.getInspection = (req, res, next) => {
     })
 }
 
+module.exports.updateInspection = (req, res, next) => {
+  Inspection.findByIdAndUpdate({ _id: req.params.id },
+    req.body,
+    (err, inspection) => {
+      if (err) return res.status(500).send(err);
+      return res.send(inspection);
+    })
+}
+
+
 module.exports.deleteInspection = (req, res, next) => {
   Inspection.findByIdAndDelete(req.params.id)
     .then(err => {

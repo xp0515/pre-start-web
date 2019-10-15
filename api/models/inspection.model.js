@@ -11,6 +11,7 @@ const inspectionSchema = new mongoose.Schema({
   performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   location: String,
   signature: String,
+  finalStatus: { type: String },
   result: [{
     item: { type: mongoose.Schema.Types.ObjectId, ref: 'Item' },
     note: String,

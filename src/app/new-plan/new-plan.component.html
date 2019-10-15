@@ -53,36 +53,38 @@
               (click)="showCreateDialog()">
             </p-button>
           </div>
-          <div class="p-col-12">
+          <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
             <div class="p-col-12">
-              <p-radioButton name="frequency" label="By time" value="by time" [(ngModel)]="selectedFrequency"
-                [ngModelOptions]="{standalone: true}">
+              <p-radioButton id="byTimeButton" name="frequency" formControlName="type" label="By time" value="by time"
+                [disabled]="timeDisabled" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by time'">
-                <p-dropdown [options]="timeOptions" formControlName="frequency"></p-dropdown>
+                <p-dropdown [options]="timeOptions" formControlName="note"></p-dropdown>
               </div>
             </div>
             <div class="p-col-12">
-              <p-radioButton name="frequency" value="by mileage" label="By mileage" [(ngModel)]="selectedFrequency"
-                [ngModelOptions]="{standalone: true}">
+              <p-radioButton id="byMileageButton" name="frequency" formControlName="type" value="by mileage"
+                label="By mileage" [disabled]="mileageDisabled" [(ngModel)]="selectedFrequency"
+                (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by mileage'">
-                <input type="text" pInputText formControlName="frequency" placeholder="Mileage" /> km
+                <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
               </div>
             </div>
             <div class="p-col-12">
-              <p-radioButton name="frequency" value="by engine hours" label="By engine hours"
-                [(ngModel)]="selectedFrequency" [ngModelOptions]="{standalone: true}">
+              <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
+                label="By engine hours" [disabled]="hourDisabled" [(ngModel)]="selectedFrequency"
+                (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
-                <input type="text" pInputText formControlName="frequency" placeholder="Engine Hours" /> h
+                <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
               </div>
             </div>
             <mat-divider></mat-divider>
           </div>
           <div class="p-col-12 text-right">
-            <button pButton type="submit" label="Save"></button>
+            <button pButton type="submit" label="Save" [disabled]="!planForm.valid"></button>
           </div>
         </div>
       </form>
@@ -141,30 +143,30 @@
               (click)="showCreateDialog()">
             </p-button>
           </div>
-          <div class="p-col-12">
+          <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
             <div class="p-col-12">
-              <p-radioButton id="byTimeButton" name="frequency" label="By time" value="by time"
-                [(ngModel)]="selectedFrequency" [ngModelOptions]="{standalone: true}" [disabled]="timeDisabled">
+              <p-radioButton id="byTimeButton" name="frequency" formControlName="type" label="By time" value="by time"
+                [disabled]="timeDisabled" [(ngModel)]="selectedFrequency">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by time'">
-                <p-dropdown [options]="timeOptions" formControlName="frequency"></p-dropdown>
+                <p-dropdown [options]="timeOptions" formControlName="note"></p-dropdown>
               </div>
             </div>
             <div class="p-col-12">
-              <p-radioButton id="byMileageButton" name="frequency" value="by mileage" label="By mileage"
-                [(ngModel)]="selectedFrequency" [ngModelOptions]="{standalone: true}" [disabled]="mileageDisabled">
+              <p-radioButton id="byMileageButton" name="frequency" formControlName="type" value="by mileage"
+                label="By mileage" [disabled]="mileageDisabled" [(ngModel)]="selectedFrequency">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by mileage'">
-                <input type="text" pInputText formControlName="frequency" placeholder="Mileage" /> km
+                <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
               </div>
             </div>
             <div class="p-col-12">
-              <p-radioButton id="byHoursButton" name="frequency" value="by engine hours" label="By engine hours"
-                [(ngModel)]="selectedFrequency" [ngModelOptions]="{standalone: true}" [disabled]="hourDisabled">
+              <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
+                label="By engine hours" [disabled]="hourDisabled" [(ngModel)]="selectedFrequency">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
-                <input type="text" pInputText formControlName="frequency" placeholder="Engine Hours" /> h
+                <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
               </div>
             </div>
             <mat-divider></mat-divider>
@@ -174,7 +176,7 @@
               style="width:100%" (click)="deletePlan(plan._id)"></button>
           </div>
           <div class="p-col-2 text-right">
-            <button pButton type="submit" label="Save" style="width:100%"></button>
+            <button pButton type="submit" label="Save" style="width:100%" [disabled]="!planForm.valid"></button>
           </div>
         </div>
       </form>

@@ -3,6 +3,7 @@ export class Inspection {
   plan: Plan;
   vehicle: Vehicle;
   status: string;
+  finalStatus: string;
   startTime: Date;
   endTime: Date;
   odometer: number;
@@ -24,7 +25,10 @@ export class Plan {
   _id: string;
   title: string;
   vehicles: [Vehicle];
-  frequency: string;
+  frequency: {
+    type: string;
+    note: string;
+  };
   lastModified: Date;
   items: [Item];
 }

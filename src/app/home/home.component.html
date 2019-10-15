@@ -46,12 +46,26 @@
           <th *ngFor="let col of columns" [ngSwitch]="col.field">
             <p-multiSelect *ngSwitchCase="'plan.title'" [options]="planOptions" defaultLabel="All Plans"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
-            <p-multiSelect *ngSwitchCase="'status'" [options]="statusOptions" defaultLabel="All"
+            <p-multiSelect *ngSwitchCase="'finalStatus'" [options]="statusOptions" defaultLabel="All"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
-            <p-multiSelect *ngSwitchCase="'vehicle.rego'" [options]="planOptions" defaultLabel="All"
+            <p-multiSelect *ngSwitchCase="'vehicle.rego'" [options]="vehicleOptions" defaultLabel="All"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <div *ngSwitchCase="'odometer'">
+              Value > {{odometerFilter}} <i class="fa fa-close"
+                (click)="odometerFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
+                *ngIf="odometerFilter"></i>
+              <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="odometerFilter" [max]="200000"
+                (onChange)="onOdometerChange($event, dt)"></p-slider>
+            </div>
             <p-multiSelect *ngSwitchCase="'performedBy'" [options]="planOptions" defaultLabel="All Drivers"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <div *ngSwitchCase="'duration'">
+              Value > {{durationFilter}} <i class="fa fa-close"
+                (click)="durationFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
+                *ngIf="durationFilter"></i>
+              <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="durationFilter" [max]="200"
+                (onChange)="onDurationChange($event, dt)"></p-slider>
+            </div>
           </th>
           <th>
           </th>
@@ -63,11 +77,15 @@
             {{inspection.plan.title}}
           </td>
           <td>
-            <span *ngIf="inspection.status === 'Fail'">
+            <span *ngIf="inspection.finalStatus==='Fail'">
               <i class="fas fa-exclamation-triangle tomato" style="font-size: 1.09rem"></i>
               {{getFailCount(inspection)}}/{{inspection.result.length}} Fail
             </span>
-            <span *ngIf="inspection.status === 'Pass'">
+            <span *ngIf="inspection.finalStatus==='Repaired'">
+              <i class="fas fa-check-square limegreen" style="font-size: 1.4rem"></i>
+              {{getFailCount(inspection)}}/{{inspection.result.length}} Repaired
+            </span>
+            <span *ngIf="inspection.finalStatus==='Pass'">
               <i class="fas fa-check-square limegreen" style="font-size: 1.4rem"></i>
               {{inspection.result.length}}/{{inspection.result.length}} Pass
             </span>
@@ -88,7 +106,7 @@
             {{inspection.duration}} s
           </td>
           <td class="text-center">
-            <p-button label="View" [routerLink]="['inspections', inspection._id]">
+            <p-button label="View" (click)=viewInspection(inspection._id)>
             </p-button>
           </td>
 
@@ -100,13 +118,13 @@
   <p-tabPanel header="Inspection plans">
     <div class="p-grid p-justify-between">
       <div class="p-col-2">
-        <p>Select vehicle</p>
+        <!-- <p>Select vehicle</p> -->
       </div>
       <div class="p-col-6 text-right">
         <p-button label="CREATE NEW PLAN" [routerLink]='["/new-plan"]' icon="pi pi-plus"></p-button>
       </div>
     </div>
-    <p>All vehicles Drop down list</p>
+    <!-- <p>All vehicles Drop down list</p> -->
     <p-table [columns]="planCols" [value]="plans" [responsive]="true" [autoLayout]="true" sortMode="multiple">
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -131,7 +149,9 @@
             </p-panel>
           </td>
           <td>
-            {{plan.frequency}}
+            <span *ngIf="plan.frequency.type==='by time'">{{plan.frequency.note}}</span>
+            <span *ngIf="plan.frequency.type==='by mileage'">{{plan.frequency.note}} km</span>
+            <span *ngIf="plan.frequency.type==='by engine hours'">{{plan.frequency.note}} h</span>
           </td>
           <td>
             {{plan.lastModified | date:'medium'}}

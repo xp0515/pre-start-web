@@ -32,6 +32,7 @@ router.delete('/plans/:id', checkAuth.verifyJwtToken, planController.deletePlan)
 //inspection resource
 router.get('/inspections', checkAuth.verifyJwtToken, inspectionController.getInspections);
 router.get('/inspections/:id', checkAuth.verifyJwtToken, inspectionController.getInspection);
+router.put('/inspections/:id', checkAuth.verifyJwtToken, inspectionController.updateInspection);
 router.delete('/inspections/:id', checkAuth.verifyJwtToken, inspectionController.deleteInspection);
 
 //user resource

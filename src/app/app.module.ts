@@ -36,6 +36,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { SliderModule } from 'primeng/slider';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import { MessageModule } from 'primeng/message';
     ProgressSpinnerModule,
     MultiSelectModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    SliderModule
   ],
   providers: [
     ConfirmationService,

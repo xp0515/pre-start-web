@@ -7,13 +7,19 @@
 <div *ngIf="!isLoading">
   <p-card header="Inspection" *ngIf="inspection" [style]="{width: '600px'}">
     <div class="p-grid p-justify-end">
-      <div class="p-col-6">
+      <div class="p-col-4">
         <a [routerLink]='["/"]'>
           <i class="pi pi-chevron-left"></i> Back to inspection list
         </a>
       </div>
-      <div class="p-col-6 text-right" style="position:relative;top:-50px">
-        <p-button label="{{inspection.status}}"></p-button>
+      <div class="p-col-8 text-right" style="position:relative;top:-50px">
+        <p-button *ngIf="inspection.status==='Pass'" label="PASS"></p-button>
+        <p-button *ngIf="inspection.finalStatus==='Fail'" label="MARK AS REPAIRED"
+          (click)="markAsRepaired(inspection._id)">
+        </p-button>
+        <p-button *ngIf="inspection.finalStatus==='Repaired'" icon="pi pi-check" label="REPAIRED"
+          (click)="markAsFailed(inspection._id)">
+        </p-button>
         &nbsp;
         <p-button label="EXPORT (.PDF)"></p-button>
       </div>

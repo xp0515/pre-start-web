@@ -26,7 +26,17 @@ export class InspectionComponent implements OnInit {
   }
 
   getFailCount(inspection) {
-    return inspection.result.filter(r => r.result === 'Pass').length;
+    return inspection.result.filter(r => r.result === 'Fail').length;
+  }
+
+  markAsRepaired(id) {
+    this.inspection.finalStatus = 'Repaired';
+    this.inspectionService.updateInspection(id, this.inspection).subscribe(() => this.router.navigate(['']));
+  }
+
+  markAsFailed(id) {
+    this.inspection.finalStatus = 'Fail';
+    this.inspectionService.updateInspection(id, this.inspection).subscribe(() => this.router.navigate(['']));
   }
 
   deleteInspection(id) {
