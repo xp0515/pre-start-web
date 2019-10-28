@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Plan = require('../models/Plan.model');
 
 module.exports.getPlans = (req, res, next) => {
@@ -47,5 +46,13 @@ module.exports.deletePlan = (req, res, next) => {
         });
       }
       res.send({ message: "Plan deleted successfully!" });
+    })
+}
+
+module.exports.getVehiclePlans = (req, res, next) => {
+  Plan.find({ "vehicles": req.params.id })
+    .exec((err, plans) => {
+      if (err) return res.status(500).send(err);
+      return res.status(200).send(plans);
     })
 }

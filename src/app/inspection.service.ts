@@ -14,7 +14,7 @@ export class InspectionService {
   plans: Plan[];
   selectedItemList = [];
 
-  url = 'http://localhost:3000/';
+  url = 'http://localhost:4000/';
 
   constructor(private http: HttpClient) { }
 
@@ -76,6 +76,10 @@ export class InspectionService {
 
   deletePlan(id) {
     return this.http.delete(this.url + 'plans/' + id);
+  }
+
+  uploadFile(file) {
+    return this.http.post(this.url + 'upload', file);
   }
 
 }

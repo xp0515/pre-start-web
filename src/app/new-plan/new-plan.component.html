@@ -57,7 +57,7 @@
             <p class="grey">Frequency of inspection plan</p>
             <div class="p-col-12">
               <p-radioButton id="byTimeButton" name="frequency" formControlName="type" label="By time" value="by time"
-                [disabled]="timeDisabled" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
+                [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by time'">
                 <p-dropdown [options]="timeOptions" formControlName="note"></p-dropdown>
@@ -65,8 +65,7 @@
             </div>
             <div class="p-col-12">
               <p-radioButton id="byMileageButton" name="frequency" formControlName="type" value="by mileage"
-                label="By mileage" [disabled]="mileageDisabled" [(ngModel)]="selectedFrequency"
-                (click)="resetFrequency()">
+                label="By mileage" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by mileage'">
                 <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
@@ -74,8 +73,7 @@
             </div>
             <div class="p-col-12">
               <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
-                label="By engine hours" [disabled]="hourDisabled" [(ngModel)]="selectedFrequency"
-                (click)="resetFrequency()">
+                label="By engine hours" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
                 <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
@@ -187,22 +185,44 @@
   <p-dialog header="{{item?.title}}" [(visible)]="editDisplay" modal="true" [style]="{width: '600px'}">
     <form [formGroup]="itemForm" id="itemForm" (ngSubmit)="updateItem(item._id)">
       <div class="ui-g">
-        <div class="ui-g-6">Inspection item title</div>
-        <div class="ui-g-6">
+        <div class="ui-g-4">Inspection item title</div>
+        <div class="ui-g-8">
           <input type="text" pInputText formControlName="title" style="width:100%" />
         </div>
-        <div class="ui-g-6">Instruction</div>
-        <div class="ui-g-6">
-          <textarea pInputTextarea formControlName="instruction" [rows]="12" style="width:100%">
+        <div class="ui-g-4">Instruction</div>
+        <div class="ui-g-8">
+          <textarea pInputTextarea formControlName="instruction" [rows]="8" style="width:100%">
             </textarea>
         </div>
-        <div>
+        <div class="ui-g-4">Current image</div>
+        <div class="ui-g-8">
+          <div *ngIf="item?.img">
+            <div *ngIf="imageIsLoading">
+              <p-progressSpinner></p-progressSpinner>
+            </div>
+            <a href={{imgSrc}} target="_blank">
+              <img (hidden)="!imageIsLoading" (load)="imageIsLoading=false" alt="Current image" src="{{imgSrc}}"
+                width="60%">
+            </a>
+          </div>
+        </div>
+        <div class="ui-g-4">
+          <p>Upload image <br /><small class="grey">Upload before save</small></p>
+        </div>
+        <div class="ui-g-8">
+          <p-progressBar *ngIf="fileUploadProgress" [value]="fileUploadProgress"></p-progressBar>
+          <p-fileUpload [files]="uploadedFiles" customUpload="true" name="img" (onSelect)="onFileSelect($event)"
+            (uploadHandler)="onUpload()">
+            <ng-template pTemplate="content">
+              <!-- <div><img src="{{imgSrc}}" width="200px"></div> -->
+            </ng-template>
+          </p-fileUpload>
         </div>
       </div>
     </form>
     <p-footer>
       <div>
-        <button pButton type="submit" form="itemForm" label="Save"></button>
+        <button pButton type="submit" form="itemForm" label="Save" [disabled]="!itemForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>
@@ -210,22 +230,29 @@
   <p-dialog header="New inspection item" [(visible)]="createDisplay" modal="true" [style]="{width: '600px'}">
     <form [formGroup]="itemForm" id="newitemForm" (ngSubmit)="createItem()">
       <div class="ui-g">
-        <div class="ui-g-6">Inspection item title</div>
-        <div class="ui-g-6">
+        <div class="ui-g-4">Inspection item title</div>
+        <div class="ui-g-8">
           <input type="text" pInputText formControlName="title" style="width:100%" />
         </div>
-        <div class="ui-g-6">Instruction</div>
-        <div class="ui-g-6">
+        <div class="ui-g-4">Instruction</div>
+        <div class="ui-g-8">
           <textarea pInputTextarea formControlName="instruction" [rows]="12" style="width:100%">
               </textarea>
         </div>
-        <div>
+        <div class="ui-g-4">
+          <p>Upload image <br /><small class="grey">Upload before save</small></p>
+        </div>
+        <div class="ui-g-8">
+          <p-progressBar *ngIf="fileUploadProgress" [value]="fileUploadProgress"></p-progressBar>
+          <p-fileUpload [files]="uploadedFiles" customUpload="true" name="img" (onSelect)="onFileSelect($event)"
+            (uploadHandler)="onUpload()">
+          </p-fileUpload>
         </div>
       </div>
     </form>
     <p-footer>
       <div>
-        <button pButton type="submit" form="newitemForm" label="Save"></button>
+        <button pButton type="submit" form="newitemForm" label="Save" [disabled]="!itemForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>

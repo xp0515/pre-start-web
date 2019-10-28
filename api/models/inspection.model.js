@@ -10,13 +10,13 @@ const inspectionSchema = new mongoose.Schema({
   odometer: { type: Number, required: true },
   performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   location: String,
-  signature: String,
-  finalStatus: { type: String },
+  signature: Buffer,
+  finalStatus: String,
   result: [{
     item: { type: mongoose.Schema.Types.ObjectId, ref: 'Item' },
     note: String,
     result: { type: String, required: true },
-    img: String,
+    img: [String],
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     duration: { type: Number, required: true }

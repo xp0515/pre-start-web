@@ -39,4 +39,7 @@ router.delete('/inspections/:id', checkAuth.verifyJwtToken, inspectionController
 router.post('/user/signup', userController.createUser);
 router.post('/user/login', userController.postUser);
 
+//file resource
+//router.post('/file', checkAuth.verifyJwtToken, itemController.postFile);
+
 module.exports = router;

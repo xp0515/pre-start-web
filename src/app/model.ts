@@ -14,11 +14,15 @@ export class Inspection {
     item: Item;
     result: string;
     note: string;
-    img: string;
+    img: [string];
     startTime: Date;
     endTime: Date;
     duration: number;
   }[];
+  signature: {
+    type: string;
+    data: [];
+  };
 }
 
 export class Plan {
@@ -45,6 +49,7 @@ export class Item {
   _id: string;
   title: string;
   instruction: string;
+  img: string;
 }
 
 export class User {

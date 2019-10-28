@@ -4,7 +4,8 @@ import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-
+import { UploadService } from '../upload.service';
+import { HttpEventType, HttpEvent } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-plan',
@@ -14,6 +15,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 export class NewPlanComponent implements OnInit {
 
   isLoading: Boolean = true;
+  imageIsLoading: Boolean = true;
   timeDisabled = false;
   mileageDisabled = false;
   hourDisabled = false;
@@ -24,7 +26,6 @@ export class NewPlanComponent implements OnInit {
   editDisplay = false;
   createDisplay = false;
   itemForm: FormGroup;
-  createitemForm: FormGroup;
   mode = 'create';
   planId;
   plan: Plan;
@@ -40,13 +41,17 @@ export class NewPlanComponent implements OnInit {
     { label: 'Monthly', value: 'Monthly' },
     //{ label: 'Custom period', value: 'Some value' },
   ];
+  uploadedFiles: any[] = [];
+  imgSrc: string = null;
+  fileUploadProgress: number = null;
 
   constructor(
     private fb: FormBuilder,
     public inspectionService: InspectionService,
     private messageService: MessageService,
     public route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private uploadService: UploadService
   ) { }
 
   addSingle() {
@@ -76,6 +81,7 @@ export class NewPlanComponent implements OnInit {
             this.selectedFrequency = 'by mileage';
             this.timeDisabled = true;
             this.hourDisabled = true;
+            //this.planForm.get('frequency').get('type').disable();
           } else if (frequency.type === 'by engine hours') {
             this.timeDisabled = true;
             this.mileageDisabled = true;
@@ -105,11 +111,15 @@ export class NewPlanComponent implements OnInit {
     });
     this.itemForm = this.fb.group({
       title: new FormControl('', Validators.required),
-      instruction: new FormControl('', Validators.required)
+      instruction: new FormControl('', Validators.required),
+      img: new FormControl('')
     });
   }
 
   showUpdatedItem(id) {
+    this.imageIsLoading = true;
+    this.imgSrc = null;
+    this.uploadedFiles = [];
     this.inspectionService.getItem(id)
       .subscribe(res => {
         this.itemForm.reset();
@@ -117,10 +127,14 @@ export class NewPlanComponent implements OnInit {
         this.itemForm.get('title').setValue(this.item.title);
         this.itemForm.get('instruction').setValue(this.item.instruction);
         this.editDisplay = true;
+        if (this.item.img) {
+          this.imgSrc = `http://localhost:4000/file/${this.item.img}`;
+        }
       });
   }
 
   createItem() {
+    this.uploadedFiles = [];
     this.inspectionService.createItem(this.itemForm.value)
       .subscribe(() => {
         this.inspectionService.getItems().subscribe(res => this.items = res);
@@ -130,11 +144,12 @@ export class NewPlanComponent implements OnInit {
   }
 
   updateItem(id) {
+    console.log(this.itemForm.value);
     this.inspectionService.updateItem(id, this.itemForm.value).subscribe(() => {
       this.inspectionService.getItems().subscribe(res => {
         this.items = res;
+        this.editDisplay = false;
       });
-      this.editDisplay = false;
     });
   }
 
@@ -142,13 +157,13 @@ export class NewPlanComponent implements OnInit {
     this.inspectionService.deleteItem(id).subscribe(() => {
       this.inspectionService.getItems().subscribe(res => {
         this.items = res;
+        this.uploadedFiles = [];
       });
     });
   }
 
   createPlan() {
     this.isLoading = true;
-    //this.updateFrequency();
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -156,7 +171,6 @@ export class NewPlanComponent implements OnInit {
 
   updatePlan(id) {
     this.isLoading = true;
-    //this.updateFrequency();
     this.inspectionService.updatePlan(id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -170,6 +184,7 @@ export class NewPlanComponent implements OnInit {
   }
 
   showCreateDialog() {
+    this.uploadedFiles = [];
     this.itemForm.reset();
     this.createDisplay = true;
   }
@@ -184,7 +199,51 @@ export class NewPlanComponent implements OnInit {
 
   resetFrequency() {
     this.planForm.get('frequency').get('note').setValue('');
-    //console.log(this.planForm)
+  }
+
+  onFileSelect(event) {
+    if (event.files.length > 0) {
+      const file = event.files[0];
+      this.itemForm.get('img').setValue(file);
+      this.uploadedFiles.push(file);
+    }
+  }
+
+  onUpload() {
+    const formData = new FormData();
+    formData.append('file', this.itemForm.get('img').value);
+    this.uploadService.uploadFile(formData).subscribe(
+      (event: HttpEvent<any>) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            console.log('Request has been made!');
+            break;
+          case HttpEventType.ResponseHeader:
+            console.log('Response header has been received!');
+            break;
+          case HttpEventType.UploadProgress:
+            this.fileUploadProgress = Math.round(event.loaded / event.total * 100);
+            console.log(`Uploaded! ${this.fileUploadProgress}%`);
+            break;
+          case HttpEventType.Response:
+            console.log('Image successfully uploaded!', event.body);
+            this.itemForm.get('img').setValue(event.body.file.filename);
+            setTimeout(() => {
+              this.fileUploadProgress = null;
+            }, 1500);
+        }
+      },
+      //   if (event.type === HttpEventType.UploadProgress) {
+      //     this.fileUploadProgress = Math.round(event.loaded / event.total * 100);
+      //     console.log(event.loaded, event.total, this.fileUploadProgress);
+      //   } else if (event.type === HttpEventType.Response) {
+      //     this.fileUploadProgress = null;
+      //     console.log(event.body);
+      //     this.itemForm.get('img').setValue(event.body.file.id);
+      //   }
+      // },
+      (err) => console.log(err)
+    );
   }
 
 }

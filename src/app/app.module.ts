@@ -37,6 +37,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 
 @NgModule({
@@ -58,7 +60,8 @@ import { SliderModule } from 'primeng/slider';
       { path: 'dashboard', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
       { path: 'new-plan', component: NewPlanComponent, canActivate: [AuthGuard] },
       { path: 'plans/:id', component: NewPlanComponent, canActivate: [AuthGuard] },
-      { path: 'inspections/:id', component: InspectionComponent, canActivate: [AuthGuard] }
+      { path: 'inspections/:id', component: InspectionComponent, canActivate: [AuthGuard] },
+      { path: '**', redirectTo: 'dashboard' }
     ]),
     TabViewModule,
     TableModule,
@@ -82,7 +85,9 @@ import { SliderModule } from 'primeng/slider';
     MultiSelectModule,
     MessagesModule,
     MessageModule,
-    SliderModule
+    SliderModule,
+    FileUploadModule,
+    ProgressBarModule
   ],
   providers: [
     ConfirmationService,

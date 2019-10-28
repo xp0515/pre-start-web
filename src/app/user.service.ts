@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
-  url = 'http://localhost:3000/';
+  url = 'http://localhost:4000/';
   token: string;
   isAuthenticated = false;
 
@@ -21,7 +21,7 @@ export class UserService {
 
   login(email: string, password: string) {
     const authData: AuthData = { email, password };
-    return this.http.post<{ token: string, message: string }>(this.url + 'user/login', authData);
+    return this.http.post<{ token: string, email: string, message: string }>(this.url + 'user/login', authData);
   }
 
   getLoggedInUser() {
@@ -47,9 +47,10 @@ export class UserService {
     return this.token;
   }
 
-  setToken(token: string) {
+  setToken(token: string, email: string) {
     this.token = token;
     localStorage.setItem('token', token);
+    localStorage.setItem('email', email);
     this.isAuthenticated = true;
   }
 

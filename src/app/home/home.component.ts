@@ -4,6 +4,7 @@ import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -37,6 +38,7 @@ export class HomeComponent {
   odometerFilter; durationFilter: number;
   odometerTimeout; durationTimeout: any;
   isLoading = true;
+  uploadedFiles: any[] = [];
 
   constructor(public inspectionService: InspectionService, public router: Router) { }
 
@@ -74,6 +76,7 @@ export class HomeComponent {
       this.vehicleOptions = [];
       vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
     });
+
   }
 
   getFailCount(inspection) {

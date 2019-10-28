@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Vehicle = require('../models/vehicle.model');
 
 module.exports.getVehicles = (req, res, next) => {

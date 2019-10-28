@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Item = require('../models/item.model');
 
 module.exports.getItems = (req, res, next) => {
