@@ -3,25 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { AuthData } from './model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
+
+const url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  url = 'http://localhost:4000/';
   token: string;
+  email: string;
   isAuthenticated = false;
 
   constructor(private http: HttpClient, private router: Router) { }
 
   register(email: string, password: string) {
     const authData: AuthData = { email, password };
-    return this.http.post(this.url + 'user/signup', authData);
+    return this.http.post(url + 'user/signup', authData);
   }
 
   login(email: string, password: string) {
     const authData: AuthData = { email, password };
-    return this.http.post<{ token: string, email: string, message: string }>(this.url + 'user/login', authData);
+    return this.http.post<{ token: string, email: string, message: string }>(url + 'user/login', authData);
   }
 
   getLoggedInUser() {
@@ -49,6 +52,7 @@ export class UserService {
 
   setToken(token: string, email: string) {
     this.token = token;
+    this.email = email;
     localStorage.setItem('token', token);
     localStorage.setItem('email', email);
     this.isAuthenticated = true;
@@ -56,6 +60,7 @@ export class UserService {
 
   private clearAuthData() {
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
   }
 
   private getAuthData() {

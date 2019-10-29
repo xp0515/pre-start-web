@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Inspection, Vehicle, Plan, Item, User } from './model';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
+import { environment } from '../environments/environment';
 
+const url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
@@ -14,72 +16,71 @@ export class InspectionService {
   plans: Plan[];
   selectedItemList = [];
 
-  url = 'http://localhost:4000/';
 
   constructor(private http: HttpClient) { }
 
   getInspections() {
-    return this.http.get<Inspection[]>(this.url + 'inspections');
+    return this.http.get<Inspection[]>(url + 'inspections');
   }
 
   getInpection(id) {
-    return this.http.get<Inspection>(this.url + 'inspections/' + id);
+    return this.http.get<Inspection>(url + 'inspections/' + id);
   }
 
   updateInspection(id, inspection) {
-    return this.http.put<Inspection>(this.url + 'inspections/' + id, inspection);
+    return this.http.put<Inspection>(url + 'inspections/' + id, inspection);
   }
 
   deleteInspection(id) {
-    return this.http.delete<Inspection>(this.url + 'inspections/' + id);
+    return this.http.delete<Inspection>(url + 'inspections/' + id);
   }
 
   getPlans() {
-    return this.http.get<Plan[]>(this.url + 'plans');
+    return this.http.get<Plan[]>(url + 'plans');
   }
 
   getPlan(id) {
-    return this.http.get<Plan>(this.url + 'plans/' + id);
+    return this.http.get<Plan>(url + 'plans/' + id);
   }
 
   getVehicles() {
-    return this.http.get<Vehicle[]>(this.url + 'vehicles');
+    return this.http.get<Vehicle[]>(url + 'vehicles');
   }
 
   getItems() {
-    return this.http.get<Item[]>(this.url + 'items');
+    return this.http.get<Item[]>(url + 'items');
   }
 
   getItem(id) {
-    return this.http.get<Item>(this.url + 'items/' + id);
+    return this.http.get<Item>(url + 'items/' + id);
   }
 
   createItem(item) {
-    return this.http.post<Item>(this.url + 'item', item);
+    return this.http.post<Item>(url + 'item', item);
   }
 
   updateItem(id, item) {
-    return this.http.put<Item>(this.url + 'items/' + id, item);
+    return this.http.put<Item>(url + 'items/' + id, item);
   }
 
   deleteItem(id) {
-    return this.http.delete<Item>(this.url + 'items/' + id);
+    return this.http.delete<Item>(url + 'items/' + id);
   }
 
   createPlan(plan) {
-    return this.http.post<Plan>(this.url + 'plan', plan);
+    return this.http.post<Plan>(url + 'plan', plan);
   }
 
   updatePlan(id, plan) {
-    return this.http.put<Plan>(this.url + 'plans/' + id, plan);
+    return this.http.put<Plan>(url + 'plans/' + id, plan);
   }
 
   deletePlan(id) {
-    return this.http.delete(this.url + 'plans/' + id);
+    return this.http.delete(url + 'plans/' + id);
   }
 
   uploadFile(file) {
-    return this.http.post(this.url + 'upload', file);
+    return this.http.post(url + 'upload', file);
   }
 
 }

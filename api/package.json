@@ -1,0 +1,47 @@
+{
+  "name": "mobileVehicleInspection",
+  "version": "0.0.1",
+  "author": "Peng",
+  "homepage": "https://ionicframework.com/",
+  "scripts": {},
+  "private": true,
+  "dependencies": {
+    "@ionic-native/file": "^5.15.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "buffer": "^5.4.3",
+    "core-js": "^2.5.4",
+    "cors": "^2.8.5",
+    "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.7.1",
+    "mongoose-unique-validator": "^2.0.3",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^3.3.0",
+    "node-mailjet": "^3.3.1",
+    "request": "^2.88.0",
+    "tslib": "^1.9.0"
+  },
+  "description": "Pre Start Check",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-sqlite-storage": {},
+      "cordova-plugin-camera": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-filepath": {}
+    },
+    "platforms": [
+      "ios",
+      "browser",
+      "android"
+    ]
+  }
+}
