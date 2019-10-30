@@ -1,0 +1,9 @@
+{
+    "appService.showBuildDuringDeployPrompt": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/d3e3dc77-8e5d-4d87-a847-6f3471d53934/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/pre-start-web",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.deploySubpath": ""
+}

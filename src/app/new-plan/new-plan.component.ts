@@ -128,7 +128,7 @@ export class NewPlanComponent implements OnInit {
         this.itemForm.get('instruction').setValue(this.item.instruction);
         this.editDisplay = true;
         if (this.item.img) {
-          this.imgSrc = `http://localhost:4000/file/${this.item.img}`;
+          this.imgSrc = `https://pre-start-api.azurewebsites.net/file/${this.item.img}`;
         }
       });
   }
@@ -144,7 +144,6 @@ export class NewPlanComponent implements OnInit {
   }
 
   updateItem(id) {
-    console.log(this.itemForm.value);
     this.inspectionService.updateItem(id, this.itemForm.value).subscribe(() => {
       this.inspectionService.getItems().subscribe(res => {
         this.items = res;

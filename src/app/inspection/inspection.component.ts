@@ -27,7 +27,6 @@ export class InspectionComponent implements OnInit {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.inspectionId = paramMap.get('id');
       this.inspectionService.getInpection(this.inspectionId).subscribe(inspection => {
-        console.log(inspection);
         this.inspection = inspection;
         const units = new Uint8Array(this.inspection.signature.data);
         this.signatureUrl = this.domSanitizationService

@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:4000/'
+  //apiUrl: 'https://pre-start-api.azurewebsites.net/'
 };
 
 /*
