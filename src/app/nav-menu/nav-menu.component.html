@@ -9,13 +9,34 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"show": isExpanded}'>
         <ul class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
+            <a class="nav-link text-dark" [routerLink]='["/"]'>Admin</a>
           </li>
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]' (click)="onLogOut()">Sign out</a>
+            <a *ngIf="client" class="nav-link text-dark" (mouseenter)="op1.show($event)">{{client.name}}</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </header>
+
+<p-overlayPanel #op1>
+  <!-- <div class="ui-g">
+    <div class="ui-g-2"> -->
+  <div class="profile-userpic">
+    <img src="/assets/images/SolBox_logo_full colour_rgb_SCREEN.png" class="img-responsive" alt="">
+  </div>
+  <div class="profile-usertitle">
+    <div class="profile-usertitle-name">
+      {{name}}
+    </div>
+    <div class="profile-usertitle-job">
+      {{email}}
+    </div>
+  </div>
+  <div class="profile-userbuttons">
+    <button pButton type="button" label="Logout" (click)="onLogOut()"></button>
+  </div>
+  <!-- </div>
+  </div> -->
+</p-overlayPanel>

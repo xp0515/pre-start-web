@@ -39,6 +39,7 @@ import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
     MessageModule,
     SliderModule,
     FileUploadModule,
-    ProgressBarModule
+    ProgressBarModule,
+    OverlayPanelModule
   ],
   providers: [
     ConfirmationService,
