@@ -17,7 +17,6 @@ export class InspectionService {
   plans: Plan[];
   selectedItemList = [];
 
-
   constructor(private http: HttpClient) { }
 
   getInspections() {

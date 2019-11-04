@@ -80,6 +80,7 @@ export class UserService {
 
   private getAuthData() {
     const token = localStorage.getItem('token');
+    this.token = token;
     if (!token) {
       return;
     }

@@ -45,7 +45,9 @@ export class LoginComponent implements OnInit {
           client: res.client
         };
         this.userService.setToken(token);
-        this.router.navigate(['dashboard']);
+        if (this.userService.isLoggedIn()) {
+          this.router.navigate(['dashboard']);
+        }
       },
         err => {
           this.errorMessage = err.error.message;
