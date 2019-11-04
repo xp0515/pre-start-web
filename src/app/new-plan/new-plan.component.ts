@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { InspectionService } from '../inspection.service';
-import { Inspection, Vehicle, Plan, Item, User } from '../model';
+import { Inspection, Vehicle, Plan, Item, User, Client } from '../model';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UploadService } from '../upload.service';
 import { HttpEventType, HttpEvent } from '@angular/common/http';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-new-plan',
@@ -20,6 +21,8 @@ export class NewPlanComponent implements OnInit {
   mileageDisabled = false;
   hourDisabled = false;
   planForm: FormGroup;
+  clientId = localStorage.getItem('client');
+  client: Client;
   items: Item[] = [];
   plans: Plan[] = [];
   item: Item;
@@ -49,6 +52,7 @@ export class NewPlanComponent implements OnInit {
     private fb: FormBuilder,
     public inspectionService: InspectionService,
     private messageService: MessageService,
+    private userService: UserService,
     public route: ActivatedRoute,
     private router: Router,
     private uploadService: UploadService
@@ -61,6 +65,9 @@ export class NewPlanComponent implements OnInit {
   ngOnInit() {
     this.inspectionService.getItems().subscribe(res => this.items = res);
     this.inspectionService.getVehicles().subscribe(res => this.vehicles = res);
+    this.userService.getClient(this.clientId).subscribe(client => {
+      this.client = client;
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('id')) {
         this.mode = 'edit';
@@ -107,12 +114,14 @@ export class NewPlanComponent implements OnInit {
         note: new FormControl('', Validators.required)
       }),
       vehicles: new FormControl(''),
-      lastModified: new FormControl(Date.now())
+      lastModified: new FormControl(Date.now()),
+      client: new FormControl('')
     });
     this.itemForm = this.fb.group({
       title: new FormControl('', Validators.required),
       instruction: new FormControl('', Validators.required),
-      img: new FormControl('')
+      img: new FormControl(''),
+      client: new FormControl('')
     });
   }
 
@@ -126,6 +135,7 @@ export class NewPlanComponent implements OnInit {
         this.item = res;
         this.itemForm.get('title').setValue(this.item.title);
         this.itemForm.get('instruction').setValue(this.item.instruction);
+        this.itemForm.patchValue({ client: this.client });
         this.editDisplay = true;
         if (this.item.img) {
           this.imgSrc = `https://pre-start-api.azurewebsites.net/file/${this.item.img}`;
@@ -135,6 +145,7 @@ export class NewPlanComponent implements OnInit {
 
   createItem() {
     this.uploadedFiles = [];
+    this.itemForm.patchValue({ client: this.client });
     this.inspectionService.createItem(this.itemForm.value)
       .subscribe(() => {
         this.inspectionService.getItems().subscribe(res => this.items = res);
@@ -163,6 +174,7 @@ export class NewPlanComponent implements OnInit {
 
   createPlan() {
     this.isLoading = true;
+    this.planForm.patchValue({ client: this.client });
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -170,6 +182,7 @@ export class NewPlanComponent implements OnInit {
 
   updatePlan(id) {
     this.isLoading = true;
+    this.planForm.patchValue({ client: this.client });
     this.inspectionService.updatePlan(id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });

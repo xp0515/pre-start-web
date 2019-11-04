@@ -23,6 +23,7 @@ export class Inspection {
     type: string;
     data: [];
   };
+  client: Client;
 }
 
 export class Plan {
@@ -35,6 +36,7 @@ export class Plan {
   };
   lastModified: Date;
   items: [Item];
+  client: Client;
 }
 
 export class Vehicle {
@@ -43,6 +45,7 @@ export class Vehicle {
   model: string;
   rego: string;
   driver: User;
+  client: Client;
 }
 
 export class Item {
@@ -50,6 +53,7 @@ export class Item {
   title: string;
   instruction: string;
   img: string;
+  client: Client;
 }
 
 export class User {
@@ -57,7 +61,16 @@ export class User {
   name: string;
   email: string;
   password: string;
-  vehicle: Vehicle;
+  mobile: string;
+  permission: number;
+  client: Client;
+}
+
+export class Client {
+  _id: string;
+  name: string;
+  admin: User;
+  logo: string;
 }
 
 export class AuthData {

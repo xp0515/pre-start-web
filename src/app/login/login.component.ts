@@ -37,7 +37,14 @@ export class LoginComponent implements OnInit {
   onLogin() {
     this.userService.login(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe(res => {
-        this.userService.setToken(res.token, res.email);
+        const token = {
+          token: res.token,
+          email: res.email,
+          name: res.name,
+          mobile: res.mobile,
+          client: res.client
+        };
+        this.userService.setToken(token);
         this.router.navigate(['dashboard']);
       },
         err => {

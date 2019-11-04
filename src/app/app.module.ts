@@ -58,10 +58,10 @@ import { ProgressBarModule } from 'primeng/progressbar';
     RouterModule.forRoot([
       { path: '', component: LoginComponent, pathMatch: 'full' },
       { path: 'dashboard', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
-      { path: 'new-plan', component: NewPlanComponent, canActivate: [AuthGuard] },
+      { path: 'new-plan/:clientId', component: NewPlanComponent, canActivate: [AuthGuard] },
       { path: 'plans/:id', component: NewPlanComponent, canActivate: [AuthGuard] },
-      { path: 'inspections/:id', component: InspectionComponent, canActivate: [AuthGuard] },
-      { path: '**', redirectTo: 'dashboard' }
+      { path: 'inspections/:clientId/:id', component: InspectionComponent, canActivate: [AuthGuard] },
+      { path: '**', redirectTo: '' }
     ]),
     TabViewModule,
     TableModule,

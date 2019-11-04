@@ -121,7 +121,7 @@
         <!-- <p>Select vehicle</p> -->
       </div>
       <div class="p-col-6 text-right">
-        <p-button label="CREATE NEW PLAN" [routerLink]='["/new-plan"]' icon="pi pi-plus"></p-button>
+        <p-button label="CREATE NEW PLAN" (click)="onCreatePlan()" icon="pi pi-plus"></p-button>
       </div>
     </div>
     <!-- <p>All vehicles Drop down list</p> -->

@@ -3,7 +3,7 @@ import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-
+const clientId = localStorage.getItem('client');
 
 @Component({
   selector: 'app-home',
@@ -46,11 +46,13 @@ export class HomeComponent {
   ngOnInit() {
     this.inspectionService.getInspections().subscribe(inspections => {
       this.inspections = inspections;
-      this.delayedCount = this.inspections.filter(i => i.finalStatus === 'Delayed').length;
-      this.failedCount = this.inspections.filter(i => i.finalStatus === 'Fail').length;
-      this.repairedCount = this.inspections.filter(i => i.finalStatus === 'Repaired').length;
-      this.passCount = this.inspections.filter(i => i.finalStatus === 'Pass').length;
-      this.completedCount = this.inspections.filter(i => i.finalStatus === 'Completed').length;
+      if (this.inspections.length) {
+        this.delayedCount = this.inspections.filter(i => i.finalStatus === 'Delayed').length;
+        this.failedCount = this.inspections.filter(i => i.finalStatus === 'Fail').length;
+        this.repairedCount = this.inspections.filter(i => i.finalStatus === 'Repaired').length;
+        this.passCount = this.inspections.filter(i => i.finalStatus === 'Pass').length;
+        this.completedCount = this.inspections.filter(i => i.finalStatus === 'Completed').length;
+      }
       this.inspectionService.getPlans().subscribe(plans => {
         this.plans = plans;
         this.inspectionService.getItems().subscribe(items => {
@@ -84,7 +86,11 @@ export class HomeComponent {
   }
 
   viewInspection(id) {
-    this.inspectionService.getInpection(id).subscribe(() => this.router.navigate([`inspections/${id}`]));
+    this.inspectionService.getInpection(id).subscribe(() => this.router.navigate([`inspections/${clientId}/${id}`]));
+  }
+
+  onCreatePlan() {
+    this.router.navigate([`new-plan/${clientId}`]);
   }
 
   onOdometerChange(event, dt) {
