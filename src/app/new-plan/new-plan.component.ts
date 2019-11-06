@@ -63,8 +63,8 @@ export class NewPlanComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.inspectionService.getItems().subscribe(res => this.items = res);
-    this.inspectionService.getVehicles().subscribe(res => this.vehicles = res);
+    this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res);
+    this.inspectionService.getVehicles(this.clientId).subscribe(res => this.vehicles = res);
     this.userService.getClient(this.clientId).subscribe(client => {
       this.client = client;
     });
@@ -72,7 +72,7 @@ export class NewPlanComponent implements OnInit {
       if (paramMap.has('id')) {
         this.mode = 'edit';
         this.planId = paramMap.get('id');
-        this.inspectionService.getPlan(this.planId).subscribe(res => {
+        this.inspectionService.getPlan(this.clientId, this.planId).subscribe(res => {
           this.plan = res;
           for (const item of this.plan.items) {
             this.selectedItems.push(item._id);
@@ -129,7 +129,7 @@ export class NewPlanComponent implements OnInit {
     this.imageIsLoading = true;
     this.imgSrc = null;
     this.uploadedFiles = [];
-    this.inspectionService.getItem(id)
+    this.inspectionService.getItem(this.clientId, id)
       .subscribe(res => {
         this.itemForm.reset();
         this.item = res;
@@ -148,15 +148,15 @@ export class NewPlanComponent implements OnInit {
     this.itemForm.patchValue({ client: this.client });
     this.inspectionService.createItem(this.itemForm.value)
       .subscribe(() => {
-        this.inspectionService.getItems().subscribe(res => this.items = res);
+        this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res);
         this.itemForm.reset();
         this.createDisplay = false;
       });
   }
 
   updateItem(id) {
-    this.inspectionService.updateItem(id, this.itemForm.value).subscribe(() => {
-      this.inspectionService.getItems().subscribe(res => {
+    this.inspectionService.updateItem(this.clientId, id, this.itemForm.value).subscribe(() => {
+      this.inspectionService.getItems(this.clientId).subscribe(res => {
         this.items = res;
         this.editDisplay = false;
       });
@@ -164,8 +164,8 @@ export class NewPlanComponent implements OnInit {
   }
 
   deleteItem(id) {
-    this.inspectionService.deleteItem(id).subscribe(() => {
-      this.inspectionService.getItems().subscribe(res => {
+    this.inspectionService.deleteItem(this.clientId, id).subscribe(() => {
+      this.inspectionService.getItems(this.clientId).subscribe(res => {
         this.items = res;
         this.uploadedFiles = [];
       });
@@ -183,14 +183,14 @@ export class NewPlanComponent implements OnInit {
   updatePlan(id) {
     this.isLoading = true;
     this.planForm.patchValue({ client: this.client });
-    this.inspectionService.updatePlan(id, this.planForm.value).subscribe(() => {
+    this.inspectionService.updatePlan(this.clientId, id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
   }
 
   deletePlan(id) {
     this.isLoading = true;
-    this.inspectionService.deletePlan(id).subscribe(() => {
+    this.inspectionService.deletePlan(this.clientId, id).subscribe(() => {
       this.router.navigate(['']);
     });
   }

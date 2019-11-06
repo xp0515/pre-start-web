@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Inspection, Vehicle, Plan, Item, User } from './model';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
 import { environment } from '../environments/environment';
 
 const url = environment.apiUrl;
-const clientId = localStorage.getItem('client');
+//const clientId = localStorage.getItem('client');
 
 @Injectable({
   providedIn: 'root'
@@ -19,27 +17,27 @@ export class InspectionService {
 
   constructor(private http: HttpClient) { }
 
-  getInspections() {
+  getInspections(clientId) {
     return this.http.get<Inspection[]>(`${url}inspections/${clientId}`);
   }
 
-  getInpection(id) {
+  getInpection(clientId, id) {
     return this.http.get<Inspection>(`${url}inspections/${clientId}/${id}`);
   }
 
-  updateInspection(id, inspection) {
+  updateInspection(clientId, id, inspection) {
     return this.http.put<Inspection>(`${url}inspections/${clientId}/${id}`, inspection);
   }
 
-  deleteInspection(id) {
+  deleteInspection(clientId, id) {
     return this.http.delete<Inspection>(`${url}inspections/${clientId}/${id}`);
   }
 
-  getPlans() {
+  getPlans(clientId) {
     return this.http.get<Plan[]>(`${url}plans/${clientId}`);
   }
 
-  getPlan(id) {
+  getPlan(clientId, id) {
     return this.http.get<Plan>(`${url}plans/${clientId}/${id}`);
   }
 
@@ -47,23 +45,23 @@ export class InspectionService {
     return this.http.post<Plan>(`${url}plan`, plan);
   }
 
-  updatePlan(id, plan) {
+  updatePlan(clientId, id, plan) {
     return this.http.put<Plan>(`${url}plans/${clientId}/${id}`, plan);
   }
 
-  deletePlan(id) {
+  deletePlan(clientId, id) {
     return this.http.delete(`${url}plans/${clientId}/${id}`);
   }
 
-  getVehicles() {
+  getVehicles(clientId) {
     return this.http.get<Vehicle[]>(`${url}vehicles/${clientId}`);
   }
 
-  getItems() {
+  getItems(clientId) {
     return this.http.get<Item[]>(`${url}items/${clientId}`);
   }
 
-  getItem(id) {
+  getItem(clientId, id) {
     return this.http.get<Item>(`${url}items/${clientId}/${id}`);
   }
 
@@ -71,11 +69,11 @@ export class InspectionService {
     return this.http.post<Item>(`${url}item`, item);
   }
 
-  updateItem(id, item) {
+  updateItem(clientId, id, item) {
     return this.http.put<Item>(`${url}items/${clientId}/${id}`, item);
   }
 
-  deleteItem(id) {
+  deleteItem(clientId, id) {
     return this.http.delete<Item>(`${url}items/${clientId}/${id}`);
   }
 

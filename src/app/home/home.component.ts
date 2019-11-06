@@ -3,7 +3,6 @@ import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-const clientId = localStorage.getItem('client');
 
 @Component({
   selector: 'app-home',
@@ -39,23 +38,24 @@ export class HomeComponent {
   odometerTimeout; durationTimeout: any;
   isLoading = true;
   uploadedFiles: any[] = [];
+  clientId = localStorage.getItem('client');
 
   constructor(public inspectionService: InspectionService, public router: Router) { }
 
   // tslint:disable-next-line: use-life-cycle-interface
   ngOnInit() {
-    this.inspectionService.getInspections().subscribe(inspections => {
+    this.inspectionService.getInspections(this.clientId).subscribe(inspections => {
       this.inspections = inspections;
       if (this.inspections.length) {
         this.delayedCount = this.inspections.filter(i => i.finalStatus === 'Delayed').length;
         this.failedCount = this.inspections.filter(i => i.finalStatus === 'Fail').length;
         this.repairedCount = this.inspections.filter(i => i.finalStatus === 'Repaired').length;
         this.passCount = this.inspections.filter(i => i.finalStatus === 'Pass').length;
-        this.completedCount = this.inspections.filter(i => i.finalStatus === 'Completed').length;
+        this.completedCount = this.inspections.length;
       }
-      this.inspectionService.getPlans().subscribe(plans => {
+      this.inspectionService.getPlans(this.clientId).subscribe(plans => {
         this.plans = plans;
-        this.inspectionService.getItems().subscribe(items => {
+        this.inspectionService.getItems(this.clientId).subscribe(items => {
           this.items = items;
           this.isLoading = false;
         });
@@ -69,12 +69,12 @@ export class HomeComponent {
       { label: 'Delayed', value: 'Delayed' },
     ];
 
-    this.inspectionService.getPlans().subscribe(plans => {
+    this.inspectionService.getPlans(this.clientId).subscribe(plans => {
       this.planOptions = [];
       plans.forEach(plan => this.planOptions.push({ label: plan.title, value: plan.title }));
     });
 
-    this.inspectionService.getVehicles().subscribe(vehicles => {
+    this.inspectionService.getVehicles(this.clientId).subscribe(vehicles => {
       this.vehicleOptions = [];
       vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
     });
@@ -86,11 +86,11 @@ export class HomeComponent {
   }
 
   viewInspection(id) {
-    this.inspectionService.getInpection(id).subscribe(() => this.router.navigate([`inspections/${clientId}/${id}`]));
+    this.inspectionService.getInpection(this.clientId, id).subscribe(() => this.router.navigate([`inspections/${this.clientId}/${id}`]));
   }
 
   onCreatePlan() {
-    this.router.navigate([`new-plan/${clientId}`]);
+    this.router.navigate([`new-plan/${this.clientId}`]);
   }
 
   onOdometerChange(event, dt) {

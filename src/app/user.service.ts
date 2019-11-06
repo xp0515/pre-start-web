@@ -19,6 +19,8 @@ export class UserService {
   client: string;
 
   isAuthenticated = false;
+  private authStatusListener = new Subject<boolean>();
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -30,21 +32,42 @@ export class UserService {
   login(email: string, password: string) {
     const authData: AuthData = { email, password };
     // tslint:disable-next-line: max-line-length
-    return this.http.post<{ token: string, email: string, message: string, name: string, mobile: string, client: string }>(url + 'user/login', authData);
+    this.http.post<{ token: string, email: string, message: string, name: string, mobile: string, client: string }>(url + 'user/login', authData)
+      .subscribe(res => {
+        const token = {
+          token: res.token,
+          email: res.email,
+          name: res.name,
+          mobile: res.mobile,
+          client: res.client
+        };
+        this.setToken(token);
+        this.isAuthenticated = true;
+        this.authStatusListener.next(true);
+        this.router.navigate(['dashboard']);
+      },
+        err => {
+          this.authStatusListener.next(false);
+        });
   }
 
   getLoggedInUser() {
     const authInfo = this.getAuthData();
     if (authInfo) {
       this.isAuthenticated = true;
+      this.authStatusListener.next(true);
+      //this.router.navigate(['dashboard']);
+    } else {
+      return;
     }
   }
 
   logout() {
     this.token = null;
     this.isAuthenticated = false;
+    this.authStatusListener.next(false);
     this.clearAuthData();
-    //this.router.navigate(['']);
+    this.router.navigate(['']);
   }
 
   isLoggedIn() {
@@ -85,6 +108,10 @@ export class UserService {
       return;
     }
     return token;
+  }
+
+  getAuthStatusListener() {
+    return this.authStatusListener.asObservable();
   }
 
   getClient(id) {

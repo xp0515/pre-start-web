@@ -17,6 +17,8 @@ export class InspectionComponent implements OnInit {
   signatureUrl = null;
   imgUrl = null;
   base64 = null;
+  clientId = localStorage.getItem('client');
+
   constructor(
     public route: ActivatedRoute,
     private router: Router,
@@ -26,7 +28,7 @@ export class InspectionComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.inspectionId = paramMap.get('id');
-      this.inspectionService.getInpection(this.inspectionId).subscribe(inspection => {
+      this.inspectionService.getInpection(this.clientId, this.inspectionId).subscribe(inspection => {
         this.inspection = inspection;
         const units = new Uint8Array(this.inspection.signature.data);
         this.signatureUrl = this.domSanitizationService
@@ -42,16 +44,16 @@ export class InspectionComponent implements OnInit {
 
   markAsRepaired(id) {
     this.inspection.finalStatus = 'Repaired';
-    this.inspectionService.updateInspection(id, this.inspection).subscribe(() => this.router.navigate(['']));
+    this.inspectionService.updateInspection(this.clientId, id, this.inspection).subscribe(() => this.router.navigate(['']));
   }
 
   markAsFailed(id) {
     this.inspection.finalStatus = 'Fail';
-    this.inspectionService.updateInspection(id, this.inspection).subscribe(() => this.router.navigate(['']));
+    this.inspectionService.updateInspection(this.clientId, id, this.inspection).subscribe(() => this.router.navigate(['']));
   }
 
   deleteInspection(id) {
-    this.inspectionService.deleteInspection(id).subscribe(() => this.router.navigate(['']));
+    this.inspectionService.deleteInspection(this.clientId, id).subscribe(() => this.router.navigate(['']));
   }
 
 }
