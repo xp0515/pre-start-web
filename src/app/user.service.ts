@@ -21,7 +21,6 @@ export class UserService {
   isAuthenticated = false;
   private authStatusListener = new Subject<boolean>();
 
-
   constructor(private http: HttpClient, private router: Router) { }
 
   register(email: string, password: string) {
