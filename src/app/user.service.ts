@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthData, Client } from './model';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
 
@@ -20,6 +20,7 @@ export class UserService {
 
   isAuthenticated = false;
   private authStatusListener = new Subject<boolean>();
+  message = new BehaviorSubject<string>(null);
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -44,9 +45,11 @@ export class UserService {
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
         this.router.navigate(['dashboard']);
+        this.message.next(null);
       },
         err => {
           this.authStatusListener.next(false);
+          this.message.next(err.error.message);
         });
   }
 
@@ -111,6 +114,10 @@ export class UserService {
 
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
+  }
+
+  getMessage() {
+    return this.message.asObservable();
   }
 
   getClient(id) {
