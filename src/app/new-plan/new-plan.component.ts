@@ -245,15 +245,6 @@ export class NewPlanComponent implements OnInit {
             }, 1500);
         }
       },
-      //   if (event.type === HttpEventType.UploadProgress) {
-      //     this.fileUploadProgress = Math.round(event.loaded / event.total * 100);
-      //     console.log(event.loaded, event.total, this.fileUploadProgress);
-      //   } else if (event.type === HttpEventType.Response) {
-      //     this.fileUploadProgress = null;
-      //     console.log(event.body);
-      //     this.itemForm.get('img').setValue(event.body.file.id);
-      //   }
-      // },
       (err) => console.log(err)
     );
   }

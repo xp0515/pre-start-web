@@ -37,7 +37,8 @@
             <span *ngFor="let item of items">
               <div class="p-grid p-justify-between" style="padding:10px 0">
                 <div class="p-col-8">
-                  <p-checkbox [formControl]="planForm.controls['items']" value="{{item._id}}" label="{{item.title}}">
+                  <p-checkbox [formControl]="planForm.controls['items']" value="{{item._id}}" label="{{item.title}}"
+                    [(ngModel)]="selectedItems">
                   </p-checkbox>
                 </div>
                 <div class="p-col-2 text-right">
@@ -92,7 +93,7 @@
 
   <!-- ------------------------------------------------------------------------------------------------------- -->
   <ng-template #edit>
-    <p-card header="{{plan.title}}" [style]="{width:'600px'}" *ngIf="selectedItems.length">
+    <p-card header="{{plan.title}}" [style]="{width:'600px'}">
       <a [routerLink]='["/"]'>
         <i class="pi pi-chevron-left"></i> Back to inspection list
       </a>
