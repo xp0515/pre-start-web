@@ -3,6 +3,7 @@ import { InspectionService } from '../inspection.service';
 import { Inspection } from '../model';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-inspection',
@@ -23,7 +24,8 @@ export class InspectionComponent implements OnInit {
     public route: ActivatedRoute,
     private router: Router,
     public inspectionService: InspectionService,
-    public domSanitizationService: DomSanitizer) { }
+    public domSanitizationService: DomSanitizer,
+    public confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -50,6 +52,19 @@ export class InspectionComponent implements OnInit {
   markAsFailed(id) {
     this.inspection.finalStatus = 'Fail';
     this.inspectionService.updateInspection(this.clientId, id, this.inspection).subscribe(() => this.router.navigate(['']));
+  }
+
+  confirmDeleteItem(id) {
+    this.confirmationService.confirm({
+      message: 'Are you sure to delete this inspection result?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.deleteInspection(id);
+      },
+      reject: () => {
+      }
+    });
   }
 
   deleteInspection(id) {

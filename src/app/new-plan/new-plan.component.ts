@@ -7,6 +7,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UploadService } from '../upload.service';
 import { HttpEventType, HttpEvent } from '@angular/common/http';
 import { UserService } from '../user.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-new-plan',
@@ -55,7 +56,8 @@ export class NewPlanComponent implements OnInit {
     private userService: UserService,
     public route: ActivatedRoute,
     private router: Router,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    public confirmationService: ConfirmationService,
   ) { }
 
   addSingle() {
@@ -63,7 +65,7 @@ export class NewPlanComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res);
+    this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res.filter(item => item.disabled !== true));
     this.inspectionService.getVehicles(this.clientId).subscribe(res => this.vehicles = res);
     this.userService.getClient(this.clientId).subscribe(client => {
       this.client = client;
@@ -115,13 +117,13 @@ export class NewPlanComponent implements OnInit {
       }),
       vehicles: new FormControl(''),
       lastModified: new FormControl(Date.now()),
-      client: new FormControl('')
+      client: new FormControl(''),
     });
     this.itemForm = this.fb.group({
       title: new FormControl('', Validators.required),
       instruction: new FormControl('', Validators.required),
       img: new FormControl(''),
-      client: new FormControl('')
+      client: new FormControl(''),
     });
   }
 
@@ -148,7 +150,7 @@ export class NewPlanComponent implements OnInit {
     this.itemForm.patchValue({ client: this.client });
     this.inspectionService.createItem(this.itemForm.value)
       .subscribe(() => {
-        this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res);
+        this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res.filter(item => item.disabled !== true));
         this.itemForm.reset();
         this.createDisplay = false;
       });
@@ -157,18 +159,36 @@ export class NewPlanComponent implements OnInit {
   updateItem(id) {
     this.inspectionService.updateItem(this.clientId, id, this.itemForm.value).subscribe(() => {
       this.inspectionService.getItems(this.clientId).subscribe(res => {
-        this.items = res;
+        this.items = res.filter(item => item.disabled !== true);
         this.editDisplay = false;
       });
     });
   }
 
   deleteItem(id) {
-    this.inspectionService.deleteItem(this.clientId, id).subscribe(() => {
+    this.inspectionService.deleteItem(this.clientId, id, this.itemForm.value).subscribe(() => {
       this.inspectionService.getItems(this.clientId).subscribe(res => {
-        this.items = res;
+        this.removeItemFromPlan(this.clientId, id);
+        this.items = res.filter(item => item.disabled !== true);
         this.uploadedFiles = [];
       });
+    });
+  }
+
+  removeItemFromPlan(clientId, itemId) {
+    this.inspectionService.removeItemFromPlan(clientId, itemId).subscribe();
+  }
+
+  confirmDeleteItem(itemId) {
+    this.confirmationService.confirm({
+      message: 'Are you sure to delete this item? This may affect the saved inspection results.',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.deleteItem(itemId);
+      },
+      reject: () => {
+      }
     });
   }
 
@@ -192,6 +212,19 @@ export class NewPlanComponent implements OnInit {
     this.isLoading = true;
     this.inspectionService.deletePlan(this.clientId, id).subscribe(() => {
       this.router.navigate(['']);
+    });
+  }
+
+  confirmDeletePlan(planId) {
+    this.confirmationService.confirm({
+      message: `Are you sure to delete this inspection plan? (This may affect the saved inspection results.`,
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.deletePlan(planId);
+      },
+      reject: () => {
+      }
     });
   }
 

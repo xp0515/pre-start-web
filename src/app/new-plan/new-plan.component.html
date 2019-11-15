@@ -43,7 +43,7 @@
                 </div>
                 <div class="p-col-2 text-right">
                   <i class="pi pi-pencil" (click)="showUpdatedItem(item._id)" style="cursor: pointer"></i>
-                  <i class="pi pi-times" (click)="deleteItem(item._id)" style="cursor: pointer"></i>
+                  <i class="pi pi-times" (click)="confirmDeleteItem(item._id)" style="cursor: pointer"></i>
                 </div>
               </div>
               <mat-divider></mat-divider>
@@ -131,7 +131,7 @@
                 </div>
                 <div class="p-col-2 text-right">
                   <i class="pi pi-pencil" (click)="showUpdatedItem(item._id)" style="cursor: pointer"></i>
-                  <i class="pi pi-times" (click)="deleteItem(item._id)" style="cursor: pointer"></i>
+                  <i class="pi pi-times" (click)="confirmDeleteItem(item._id)" style="cursor: pointer"></i>
                 </div>
               </div>
               <mat-divider></mat-divider>
@@ -172,7 +172,7 @@
           </div>
           <div class="p-col-8"></div>
           <div class="p-col-2 text-right"> <button class="ui-button-secondary" pButton type="button" label="Delete"
-              style="width:100%" (click)="deletePlan(plan._id)"></button>
+              style="width:100%" (click)="confirmDeletePlan(plan._id)"></button>
           </div>
           <div class="p-col-2 text-right">
             <button pButton type="submit" label="Save" style="width:100%" [disabled]="!planForm.valid"></button>
@@ -257,4 +257,6 @@
       </div>
     </p-footer>
   </p-dialog>
+
+  <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
 </div>

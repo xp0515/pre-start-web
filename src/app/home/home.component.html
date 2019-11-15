@@ -144,7 +144,14 @@
           <td>
             <p-panel header="{{plan.vehicles.length}} vehicles" [collapsed]="true" [toggleable]="true">
               <span *ngFor="let vehicle of plan.vehicles">
-                {{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}<br />
+                - {{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}<br />
+              </span>
+            </p-panel>
+          </td>
+          <td>
+            <p-panel header="{{plan.items.length}} items" [collapsed]="true" [toggleable]="true">
+              <span *ngFor="let item of plan.items">
+                - {{item.title}}<br />
               </span>
             </p-panel>
           </td>

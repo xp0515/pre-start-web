@@ -23,6 +23,7 @@ export class HomeComponent {
   planCols = [
     { field: 'title', header: 'Inspection plan title' },
     { field: 'vehicle', header: 'Vehicles' },
+    { field: 'item', header: 'Inspection items' },
     { field: 'frequency', header: 'Inspection frequency' },
     { field: 'lastModify', header: 'Last modified' },
     { field: 'edit', header: 'Edit' },
@@ -32,7 +33,7 @@ export class HomeComponent {
   inspection: Inspection;
   plans: Plan[] = [];
   items: Item[] = [];
-  delayedCount; failedCount; repairedCount; passCount; completedCount: number;
+  delayedCount = 0; failedCount = 0; repairedCount = 0; passCount = 0; completedCount = 0;
   planOptions; statusOptions; vehicleOptions; driverOptions: SelectItem[];
   odometerFilter; durationFilter: number;
   odometerTimeout; durationTimeout: any;
@@ -54,7 +55,7 @@ export class HomeComponent {
         this.completedCount = this.inspections.length;
       }
       this.inspectionService.getPlans(this.clientId).subscribe(plans => {
-        this.plans = plans;
+        this.plans = plans.filter(plan => plan.disabled !== true);
         this.inspectionService.getItems(this.clientId).subscribe(items => {
           this.items = items;
           this.isLoading = false;

@@ -37,6 +37,7 @@ export class Plan {
   lastModified: Date;
   items: [Item];
   client: Client;
+  disabled: boolean;
 }
 
 export class Vehicle {
@@ -54,6 +55,7 @@ export class Item {
   instruction: string;
   img: string;
   client: Client;
+  disabled: boolean;
 }
 
 export class User {

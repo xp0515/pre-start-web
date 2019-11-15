@@ -90,8 +90,10 @@
       </div>
       <div class="ui-g-3 text-right">
         <button pButton type="button" class="ui-button-warning" label="DELETE"
-          (click)="deleteInspection(inspection._id)"></button>
+          (click)="confirmDeleteItem(inspection._id)"></button>
       </div>
     </div>
   </p-card>
+
+  <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
 </div>

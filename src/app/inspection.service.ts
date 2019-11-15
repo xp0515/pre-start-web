@@ -73,8 +73,12 @@ export class InspectionService {
     return this.http.put<Item>(`${url}items/${clientId}/${id}`, item);
   }
 
-  deleteItem(clientId, id) {
-    return this.http.delete<Item>(`${url}items/${clientId}/${id}`);
+  deleteItem(clientId, id, item) {
+    return this.http.put<Item>(`${url}items/${clientId}/disable/${id}`, item);
+  }
+
+  removeItemFromPlan(clientId, itemId) {
+    return this.http.delete<any>(`${url}plans/${clientId}/removeitem/${itemId}`);
   }
 
   uploadFile(file) {
