@@ -57,7 +57,7 @@
               <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="odometerFilter" [max]="200000"
                 (onChange)="onOdometerChange($event, dt)"></p-slider>
             </div>
-            <p-multiSelect *ngSwitchCase="'performedBy'" [options]="planOptions" defaultLabel="All Drivers"
+            <p-multiSelect *ngSwitchCase="'performedBy'" [options]="driverOptions" defaultLabel="All Drivers"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
             <div *ngSwitchCase="'duration'">
               Value > {{durationFilter}} <i class="fa fa-close"

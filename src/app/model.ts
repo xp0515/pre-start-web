@@ -55,6 +55,7 @@ export class Item {
   instruction: string;
   img: string;
   client: Client;
+  critical: boolean;
   disabled: boolean;
 }
 

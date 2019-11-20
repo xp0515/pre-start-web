@@ -3,6 +3,7 @@ import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +42,7 @@ export class HomeComponent {
   uploadedFiles: any[] = [];
   clientId = localStorage.getItem('client');
 
-  constructor(public inspectionService: InspectionService, public router: Router) { }
+  constructor(private inspectionService: InspectionService, public router: Router, private userService: UserService) { }
 
   // tslint:disable-next-line: use-life-cycle-interface
   ngOnInit() {
@@ -80,6 +81,10 @@ export class HomeComponent {
       vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
     });
 
+    this.userService.getDrivers(this.clientId).subscribe(drivers => {
+      this.driverOptions = [];
+      drivers.forEach(driver => this.driverOptions.push({ label: driver.name, value: driver.name }));
+    });
   }
 
   getFailCount(inspection) {

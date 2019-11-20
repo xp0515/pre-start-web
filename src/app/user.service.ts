@@ -123,4 +123,8 @@ export class UserService {
   getClient(id) {
     return this.http.get<Client>(`${url}client/${id}`);
   }
+
+  getDrivers(clientId) {
+    return this.http.get<any>(`${url}user/client/${clientId}`);
+  }
 }

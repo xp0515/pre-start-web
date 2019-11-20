@@ -123,6 +123,7 @@ export class NewPlanComponent implements OnInit {
       title: new FormControl('', Validators.required),
       instruction: new FormControl('', Validators.required),
       img: new FormControl(''),
+      critical: new FormControl(''),
       client: new FormControl(''),
     });
   }
@@ -137,6 +138,7 @@ export class NewPlanComponent implements OnInit {
         this.item = res;
         this.itemForm.get('title').setValue(this.item.title);
         this.itemForm.get('instruction').setValue(this.item.instruction);
+        this.itemForm.get('critical').setValue(this.item.critical);
         this.itemForm.patchValue({ client: this.client });
         this.editDisplay = true;
         if (this.item.img) {
