@@ -110,7 +110,6 @@ export class NewPlanComponent implements OnInit {
           }
           for (const vehicle of this.plan.vehicles) {
             this.selectedVehicles.push(vehicle._id);
-            //this.selectedTreeVehicles.push(vehicle._id);
           }
           this.planForm.get('title').setValue(this.plan.title);
           this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
@@ -285,7 +284,7 @@ export class NewPlanComponent implements OnInit {
     }
     vehicles = [...new Set(vehicles)];
     this.planForm.patchValue({ vehicles: vehicles });
-    console.log(this.planForm.value);
+    //console.log(this.planForm.value);
   }
 
   deletePlan(id) {
@@ -379,7 +378,7 @@ export class NewPlanComponent implements OnInit {
   }
 
   onNodeSelect(event) {
-    console.log(this.selectedTreeVehicles);
+    //console.log(this.selectedTreeVehicles);
   }
 
   onMoveToTarget(event) {
