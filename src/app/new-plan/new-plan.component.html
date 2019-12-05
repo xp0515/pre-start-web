@@ -16,21 +16,46 @@
             <input type="text" pInputText formControlName="title" style="width:100%" />
           </div>
           <div class="p-col-12">
-            <p class="grey">Select vehicles</p>
-            <mat-divider></mat-divider>
-            <p-scrollPanel [style]="{width: '100%', height: '200px'}">
-              <span *ngFor="let vehicle of vehicles">
-                <div class="p-grid p-justify-between" style="padding:10px 0">
-                  <div class="p-col-8">
-                    <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
-                      label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
-                    </p-checkbox>
-                  </div>
-                </div>
+            <p-tabView (onChange)="onTabChange($event)">
+              <p-tabPanel header="Vehicles">
+                <p class="grey">Select vehicles</p>
                 <mat-divider></mat-divider>
-              </span>
-            </p-scrollPanel>
+                <div class="p-col-12">
+                  <p-multiSelect [options]="vehicleOptions" [(ngModel)]="selectedVehicles"
+                    [ngModelOptions]="{standalone: true}"></p-multiSelect>
+                </div>
+
+                <!-- <p-scrollPanel [style]="{width: '100%', height: '200px'}">
+                  <span *ngFor="let vehicle of vehicles">
+                    <div class="p-grid p-justify-between" style="padding:10px 0">
+                      <div class="p-col-8">
+                        <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
+                          label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
+                        </p-checkbox>
+                      </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                  </span>
+                </p-scrollPanel> -->
+                <div class="p-col-12 text-right">
+                  <p-button type="button" label="Add new vehicle" icon="pi pi-plus" iconPos="left"
+                    (click)="showCreateVehicleDialog()">
+                  </p-button>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="Vehicle groups">
+                <p-tree [value]="data" selectionMode="checkbox" [(selection)]="selectedTreeVehicles"
+                  (onNodeSelect)="onNodeSelect($event)"></p-tree>
+                <!-- <div>Selected Nodes: <span *ngFor="let vehicle of selectedTreeVehicles">{{vehicle.data}} </span></div> -->
+                <div class="p-col-12 text-right">
+                  <p-button type="button" label="Add new vehicle group" icon="pi pi-plus" iconPos="left"
+                    (click)="showCreateVehicleGroupDialog()">
+                  </p-button>
+                </div>
+              </p-tabPanel>
+            </p-tabView>
           </div>
+
           <div class="p-col-12">
             <p class="grey">Select inspection plan items</p>
             <mat-divider></mat-divider>
@@ -51,7 +76,7 @@
           </div>
           <div class="p-col-12 text-right">
             <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
-              (click)="showCreateDialog()">
+              (click)="showCreateItemDialog()">
             </p-button>
           </div>
           <div class="p-col-12" formGroupName="frequency">
@@ -104,21 +129,46 @@
             <input type="text" pInputText formControlName="title" style="width:100%" />
           </div>
           <div class="p-col-12">
-            <p class="grey">Select vehicles</p>
-            <mat-divider></mat-divider>
-            <p-scrollPanel [style]="{width: '100%', height: '200px'}">
-              <span *ngFor="let vehicle of vehicles">
-                <div class="p-grid p-justify-between" style="padding:10px 0">
-                  <div class="p-col-8">
-                    <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
-                      label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
-                    </p-checkbox>
-                  </div>
-                </div>
+            <p-tabView (onChange)="onTabChange($event)">
+              <p-tabPanel header="Vehicles">
+                <p class="grey">Select vehicles</p>
                 <mat-divider></mat-divider>
-              </span>
-            </p-scrollPanel>
+                <div class="p-col-12">
+                  <p-multiSelect [options]="vehicleOptions" [(ngModel)]="selectedVehicles"
+                    [ngModelOptions]="{standalone: true}"></p-multiSelect>
+                </div>
+
+                <!-- <p-scrollPanel [style]="{width: '100%', height: '200px'}">
+                    <span *ngFor="let vehicle of vehicles">
+                      <div class="p-grid p-justify-between" style="padding:10px 0">
+                        <div class="p-col-8">
+                          <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
+                            label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
+                          </p-checkbox>
+                        </div>
+                      </div>
+                      <mat-divider></mat-divider>
+                    </span>
+                  </p-scrollPanel> -->
+                <div class="p-col-12 text-right">
+                  <p-button type="button" label="Add new vehicle" icon="pi pi-plus" iconPos="left"
+                    (click)="showCreateVehicleDialog()">
+                  </p-button>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="Vehicle groups">
+                <p-tree [value]="data" selectionMode="checkbox" [(selection)]="selectedTreeVehicles"
+                  (onNodeSelect)="onNodeSelect($event)"></p-tree>
+                <!-- <div>Selected Nodes: <span *ngFor="let vehicle of selectedTreeVehicles">{{vehicle.data}} </span></div> -->
+                <div class="p-col-12 text-right">
+                  <p-button type="button" label="Add new vehicle group" icon="pi pi-plus" iconPos="left"
+                    (click)="showCreateVehicleGroupDialog()">
+                  </p-button>
+                </div>
+              </p-tabPanel>
+            </p-tabView>
           </div>
+
           <div class="p-col-12">
             <p class="grey">Select inspection plan items</p>
             <mat-divider></mat-divider>
@@ -139,7 +189,7 @@
           </div>
           <div class="p-col-12 text-right">
             <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
-              (click)="showCreateDialog()">
+              (click)="showCreateItemDialog()">
             </p-button>
           </div>
           <div class="p-col-12" formGroupName="frequency">
@@ -232,7 +282,7 @@
     </p-footer>
   </p-dialog>
 
-  <p-dialog header="New inspection item" [(visible)]="createDisplay" modal="true" [style]="{width: '600px'}">
+  <p-dialog header="New inspection item" [(visible)]="createItemDisplay" modal="true" [style]="{width: '600px'}">
     <form [formGroup]="itemForm" id="newitemForm" (ngSubmit)="createItem()">
       <div class="ui-g">
         <div class="ui-g-4">Inspection item title</div>
@@ -262,6 +312,56 @@
     <p-footer>
       <div>
         <button pButton type="submit" form="newitemForm" label="Save" [disabled]="!itemForm.valid"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="New vehicle" [(visible)]="createVehicleDisplay" modal="true" [style]="{width: '600px'}">
+    <form [formGroup]="vehicleForm" id="newVehicleForm" (ngSubmit)="createVehicle()">
+      <div class="ui-g">
+        <div class="ui-g-4">Rego</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="rego" style="width:100%" />
+        </div>
+        <div class="ui-g-4">Make</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="make" style="width:100%" />
+        </div>
+        <div class="ui-g-4">Model</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="model" style="width:100%" />
+        </div>
+      </div>
+    </form>
+    <p-footer>
+      <div>
+        <button pButton type="submit" form="newVehicleForm" label="Save" [disabled]="!vehicleForm.valid"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="New vehicle group" [(visible)]="createVehicleGroupDisplay" modal="true" responsive="true"
+    [style]="{width: '1000px'}">
+    <p-pickList [source]="sourceVehicleList" [target]="targetVehicleList" sourceHeader="Available"
+      targetHeader="Selected" [responsive]="true" dragdrop="true" [showSourceControls]="false" metaKeySelection="false"
+      [showTargetControls]="false" (onMoveToTarget)="onMoveToTarget($event)" (onMoveToSource)="onMoveToSource($event)">
+      <ng-template let-vehicle pTemplate="item">
+        <div>
+          {{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}
+        </div>
+      </ng-template>
+    </p-pickList>
+    <p-footer>
+      <div class="ui-g">
+        <div class="ui-g-4">
+        </div>
+        <div class="ui-g-1"></div>
+        <div class="ui-g-6">
+          New Vehicle group name: <input type="text" pInputText [(ngModel)]="groupName" />
+        </div>
+        <div class="ui-g-1">
+          <button pButton label="Save" (click)="createVehicleGroup()" [disabled]="!groupName"></button>
+        </div>
       </div>
     </p-footer>
   </p-dialog>

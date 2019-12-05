@@ -43,6 +43,18 @@ p {
   color: orange;
 }
 
+.ui-multiselect {
+  display: block !important;
+}
+
+.ui-picklist .ui-picklist-list{
+  height:500px !important;
+}
+
+.ui-tree {
+  width: 100% !important;
+}
+
 [type=button], [type=reset], [type=submit], button {
   -webkit-appearance: none !important;
 }

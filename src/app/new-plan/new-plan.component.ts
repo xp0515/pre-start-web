@@ -8,6 +8,8 @@ import { UploadService } from '../upload.service';
 import { HttpEventType, HttpEvent } from '@angular/common/http';
 import { UserService } from '../user.service';
 import { ConfirmationService } from 'primeng/api';
+import { SelectItem } from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 
 @Component({
   selector: 'app-new-plan',
@@ -22,14 +24,17 @@ export class NewPlanComponent implements OnInit {
   mileageDisabled = false;
   hourDisabled = false;
   planForm: FormGroup;
+  itemForm: FormGroup;
+  vehicleForm: FormGroup;
   clientId = localStorage.getItem('client');
   client: Client;
   items: Item[] = [];
   plans: Plan[] = [];
   item: Item;
   editDisplay = false;
-  createDisplay = false;
-  itemForm: FormGroup;
+  createItemDisplay = false;
+  createVehicleDisplay = false;
+  createVehicleGroupDisplay = false;
   mode = 'create';
   planId;
   plan: Plan;
@@ -48,6 +53,14 @@ export class NewPlanComponent implements OnInit {
   uploadedFiles: any[] = [];
   imgSrc: string = null;
   fileUploadProgress: number = null;
+  tabIndex = 0;
+  vehicleOptions: SelectItem[];
+  data: TreeNode[] = [];
+  selectedTreeVehicles: TreeNode[];
+  sourceVehicleList: Vehicle[];
+  targetVehicleList: Vehicle[];
+  groupVehicleList = [];
+  groupName = '';
 
   constructor(
     private fb: FormBuilder,
@@ -66,9 +79,25 @@ export class NewPlanComponent implements OnInit {
 
   ngOnInit() {
     this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res.filter(item => item.disabled !== true));
-    this.inspectionService.getVehicles(this.clientId).subscribe(res => this.vehicles = res);
+    this.inspectionService.getVehicles(this.clientId).subscribe(vehicles => {
+      this.vehicles = vehicles;
+      this.sourceVehicleList = vehicles;
+      this.targetVehicleList = [];
+      this.vehicleOptions = [];
+      vehicles.forEach(vehicle => this.vehicleOptions.push({
+        label: `${vehicle.rego} ${vehicle.make} ${vehicle.model}`,
+        value: vehicle._id
+      }));
+    });
     this.userService.getClient(this.clientId).subscribe(client => {
       this.client = client;
+    });
+    this.inspectionService.getVehicleGroup(this.clientId).subscribe(res => {
+      if (res) {
+        this.data = res.group;
+        // this.data.forEach(group => group.parent = null);
+        console.log(this.data);
+      }
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('id')) {
@@ -81,6 +110,7 @@ export class NewPlanComponent implements OnInit {
           }
           for (const vehicle of this.plan.vehicles) {
             this.selectedVehicles.push(vehicle._id);
+            //this.selectedTreeVehicles.push(vehicle._id);
           }
           this.planForm.get('title').setValue(this.plan.title);
           this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
@@ -90,7 +120,6 @@ export class NewPlanComponent implements OnInit {
             this.selectedFrequency = 'by mileage';
             this.timeDisabled = true;
             this.hourDisabled = true;
-            //this.planForm.get('frequency').get('type').disable();
           } else if (frequency.type === 'by engine hours') {
             this.timeDisabled = true;
             this.mileageDisabled = true;
@@ -126,6 +155,12 @@ export class NewPlanComponent implements OnInit {
       critical: new FormControl(''),
       client: new FormControl(''),
     });
+    this.vehicleForm = this.fb.group({
+      rego: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+      make: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      model: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      client: new FormControl(''),
+    });
   }
 
   showUpdatedItem(id) {
@@ -151,29 +186,26 @@ export class NewPlanComponent implements OnInit {
     this.uploadedFiles = [];
     this.itemForm.patchValue({ client: this.client });
     this.inspectionService.createItem(this.itemForm.value)
-      .subscribe(() => {
-        this.inspectionService.getItems(this.clientId).subscribe(res => this.items = res.filter(item => item.disabled !== true));
+      .subscribe(res => {
+        this.items.push(res);
         this.itemForm.reset();
-        this.createDisplay = false;
+        this.createItemDisplay = false;
       });
   }
 
   updateItem(id) {
-    this.inspectionService.updateItem(this.clientId, id, this.itemForm.value).subscribe(() => {
-      this.inspectionService.getItems(this.clientId).subscribe(res => {
-        this.items = res.filter(item => item.disabled !== true);
-        this.editDisplay = false;
-      });
+    this.inspectionService.updateItem(this.clientId, id, this.itemForm.value).subscribe(res => {
+      const index = this.items.findIndex(item => item._id === id);
+      this.items[index] = res;
+      this.editDisplay = false;
     });
   }
 
   deleteItem(id) {
-    this.inspectionService.deleteItem(this.clientId, id, this.itemForm.value).subscribe(() => {
-      this.inspectionService.getItems(this.clientId).subscribe(res => {
-        this.removeItemFromPlan(this.clientId, id);
-        this.items = res.filter(item => item.disabled !== true);
-        this.uploadedFiles = [];
-      });
+    this.inspectionService.deleteItem(this.clientId, id, this.itemForm.value).subscribe(res => {
+      this.items = this.items.filter(item => item._id !== id);
+      this.removeItemFromPlan(this.clientId, id);
+      this.uploadedFiles = [];
     });
   }
 
@@ -194,9 +226,36 @@ export class NewPlanComponent implements OnInit {
     });
   }
 
+  createVehicle() {
+    this.vehicleForm.patchValue({ client: this.client });
+    this.inspectionService.createVehicle(this.vehicleForm.value)
+      .subscribe(res => {
+        this.vehicles.push(res);
+        this.vehicleForm.reset();
+        this.createVehicleDisplay = false;
+      });
+  }
+
+  createVehicleGroup() {
+    this.data.push({
+      label: this.groupName,
+      children: this.groupVehicleList,
+      parent: null
+    });
+    const vehicleGroup = {
+      group: this.data,
+      client: this.clientId
+    };
+    this.inspectionService.createVehicleGroup(this.clientId, vehicleGroup)
+      .subscribe((res) => {
+        this.createVehicleGroupDisplay = false;
+        location.reload();
+      });
+  }
+
   createPlan() {
     this.isLoading = true;
-    this.planForm.patchValue({ client: this.client });
+    this.patchPlanFormValue();
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -204,10 +263,29 @@ export class NewPlanComponent implements OnInit {
 
   updatePlan(id) {
     this.isLoading = true;
-    this.planForm.patchValue({ client: this.client });
+    this.patchPlanFormValue();
     this.inspectionService.updatePlan(this.clientId, id, this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
+  }
+
+  patchPlanFormValue() {
+    this.planForm.patchValue({ client: this.client });
+    let vehicles = [];
+    if (this.tabIndex === 0) {
+      this.selectedVehicles.forEach(vehicle => {
+        vehicles.push(vehicle);
+      });
+    } else {
+      this.selectedTreeVehicles.forEach(vehicle => {
+        if (vehicle.data) {
+          vehicles.push(vehicle.data);
+        }
+      });
+    }
+    vehicles = [...new Set(vehicles)];
+    this.planForm.patchValue({ vehicles: vehicles });
+    console.log(this.planForm.value);
   }
 
   deletePlan(id) {
@@ -230,10 +308,22 @@ export class NewPlanComponent implements OnInit {
     });
   }
 
-  showCreateDialog() {
+  showCreateItemDialog() {
     this.uploadedFiles = [];
     this.itemForm.reset();
-    this.createDisplay = true;
+    this.createItemDisplay = true;
+  }
+
+  showCreateVehicleDialog() {
+    this.vehicleForm.reset();
+    this.createVehicleDisplay = true;
+  }
+
+  showCreateVehicleGroupDialog() {
+    this.inspectionService.getVehicles(this.clientId).subscribe(vehicles => this.sourceVehicleList = vehicles);
+    this.targetVehicleList = [];
+    this.groupName = '';
+    this.createVehicleGroupDisplay = true;
   }
 
   updateFrequency() {
@@ -282,6 +372,31 @@ export class NewPlanComponent implements OnInit {
       },
       (err) => console.log(err)
     );
+  }
+
+  onTabChange(event) {
+    this.tabIndex = event.index;
+  }
+
+  onNodeSelect(event) {
+    console.log(this.selectedTreeVehicles);
+  }
+
+  onMoveToTarget(event) {
+    event.items.forEach(item => {
+      if (!this.groupVehicleList.some(vehicle => vehicle.data === item._id)) {
+        this.groupVehicleList.push({
+          label: `${item.rego} ${item.make} ${item.model}`,
+          data: item._id
+        });
+      }
+    });
+  }
+
+  onMoveToSource(event) {
+    event.items.forEach(item => {
+      this.groupVehicleList = this.groupVehicleList.filter(vehicle => vehicle.data !== item._id);
+    });
   }
 
 }

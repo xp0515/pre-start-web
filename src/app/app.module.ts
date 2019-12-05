@@ -40,6 +40,8 @@ import { SliderModule } from 'primeng/slider';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TreeModule } from 'primeng/tree';
+import { PickListModule } from 'primeng/picklist';
 
 
 @NgModule({
@@ -89,7 +91,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     SliderModule,
     FileUploadModule,
     ProgressBarModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    TreeModule,
+    PickListModule,
   ],
   providers: [
     ConfirmationService,

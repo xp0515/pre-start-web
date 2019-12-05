@@ -57,6 +57,10 @@ export class InspectionService {
     return this.http.get<Vehicle[]>(`${url}vehicles/${clientId}`);
   }
 
+  createVehicle(vehicle) {
+    return this.http.post<Vehicle>(`${url}vehicle`, vehicle);
+  }
+
   getItems(clientId) {
     return this.http.get<Item[]>(`${url}items/${clientId}`);
   }
@@ -83,6 +87,14 @@ export class InspectionService {
 
   uploadFile(file) {
     return this.http.post(url + 'upload', file);
+  }
+
+  createVehicleGroup(clientId, vehicleGroup) {
+    return this.http.post<any>(`${url}vehiclegroup/${clientId}`, vehicleGroup);
+  }
+
+  getVehicleGroup(clientId) {
+    return this.http.get<any>(`${url}vehiclegroup/${clientId}`);
   }
 
 }

@@ -45,7 +45,6 @@ export class Vehicle {
   make: string;
   model: string;
   rego: string;
-  driver: User;
   client: Client;
 }
 
