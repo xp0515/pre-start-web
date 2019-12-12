@@ -42,6 +42,8 @@ export class NewPlanComponent implements OnInit {
   vehicles: Vehicle[] = [];
   selectedVehicles = [];
   selectedFrequency = '';
+  selectedTime = '';
+  selectedDay: number;
   timeOptions = [
     { label: '', value: '' },
     { label: 'Show all the time', value: 'Show all the time' },
@@ -50,6 +52,17 @@ export class NewPlanComponent implements OnInit {
     { label: 'Monthly', value: 'Monthly' },
     //{ label: 'Custom period', value: 'Some value' },
   ];
+  weeklyDayOptions = [
+    // { label: '', value: '' },
+    { label: 'Monday', value: 1 },
+    { label: 'Tueday', value: 2 },
+    { label: 'Wednesday', value: 3 },
+    { label: 'Thursday', value: 4 },
+    { label: 'Friday', value: 5 },
+    { label: 'Saturday', value: 6 },
+    { label: 'Sunday', value: 7 },
+  ];
+  monthlyDayOptions = [];
   uploadedFiles: any[] = [];
   imgSrc: string = null;
   fileUploadProgress: number = null;
@@ -96,44 +109,7 @@ export class NewPlanComponent implements OnInit {
       if (res) {
         this.data = res.group;
         // this.data.forEach(group => group.parent = null);
-        console.log(this.data);
-      }
-    });
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('id')) {
-        this.mode = 'edit';
-        this.planId = paramMap.get('id');
-        this.inspectionService.getPlan(this.clientId, this.planId).subscribe(res => {
-          this.plan = res;
-          for (const item of this.plan.items) {
-            this.selectedItems.push(item._id);
-          }
-          for (const vehicle of this.plan.vehicles) {
-            this.selectedVehicles.push(vehicle._id);
-          }
-          this.planForm.get('title').setValue(this.plan.title);
-          this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
-          this.planForm.get('frequency').get('note').setValue(this.plan.frequency.note);
-          const frequency = this.plan.frequency;
-          if (frequency.type === 'by mileage') {
-            this.selectedFrequency = 'by mileage';
-            this.timeDisabled = true;
-            this.hourDisabled = true;
-          } else if (frequency.type === 'by engine hours') {
-            this.timeDisabled = true;
-            this.mileageDisabled = true;
-            this.selectedFrequency = 'by engine hours';
-          } else {
-            this.mileageDisabled = true;
-            this.hourDisabled = true;
-            this.selectedFrequency = 'by time';
-          }
-          this.isLoading = false;
-        });
-      } else {
-        this.mode = 'create';
-        this.planId = null;
-        this.isLoading = false;
+        //console.log(this.data);
       }
     });
     this.planForm = this.fb.group({
@@ -141,7 +117,8 @@ export class NewPlanComponent implements OnInit {
       items: new FormControl('', Validators.required),
       frequency: this.fb.group({
         type: new FormControl('', Validators.required),
-        note: new FormControl('', Validators.required)
+        note: new FormControl('', Validators.required),
+        day: new FormControl('1')
       }),
       vehicles: new FormControl(''),
       lastModified: new FormControl(Date.now()),
@@ -160,6 +137,56 @@ export class NewPlanComponent implements OnInit {
       model: new FormControl('', [Validators.required, Validators.maxLength(20)]),
       client: new FormControl(''),
     });
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('id')) {
+        this.mode = 'edit';
+        this.planId = paramMap.get('id');
+        this.inspectionService.getPlan(this.clientId, this.planId).subscribe(res => {
+          this.plan = res;
+          for (const item of this.plan.items) {
+            this.selectedItems.push(item._id);
+          }
+          for (const vehicle of this.plan.vehicles) {
+            this.selectedVehicles.push(vehicle._id);
+          }
+          this.planForm.get('title').setValue(this.plan.title);
+          this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
+          this.planForm.get('frequency').get('note').setValue(this.plan.frequency.note);
+          this.planForm.get('frequency').get('day').setValue(this.plan.frequency.day);
+          const frequency = this.plan.frequency;
+          switch (frequency.type) {
+            case 'by mileage':
+              this.selectedFrequency = 'by mileage';
+              this.timeDisabled = true;
+              this.hourDisabled = true;
+              break;
+            case 'by engine hours':
+              this.timeDisabled = true;
+              this.mileageDisabled = true;
+              this.selectedFrequency = 'by engine hours';
+              break;
+            default:
+              this.mileageDisabled = true;
+              this.hourDisabled = true;
+              this.selectedFrequency = 'by time';
+              this.selectedTime = frequency.note;
+              this.selectedDay = frequency.day;
+          }
+          this.isLoading = false;
+        });
+      } else {
+        this.mode = 'create';
+        this.planId = null;
+        this.isLoading = false;
+      }
+    });
+    // this.monthlyDayOptions.push({ label: '', value: '' });
+    for (let i = 1; i < 29; i++) {
+      this.monthlyDayOptions.push({
+        label: i,
+        value: i
+      });
+    }
   }
 
   showUpdatedItem(id) {
@@ -284,7 +311,11 @@ export class NewPlanComponent implements OnInit {
     }
     vehicles = [...new Set(vehicles)];
     this.planForm.patchValue({ vehicles: vehicles });
-    //console.log(this.planForm.value);
+    const note = this.planForm.get('frequency').value.note;
+    if (note !== 'Weekly' && note !== 'Monthly') {
+      this.planForm.patchValue({ frequency: { day: null } });
+    }
+    console.log(this.planForm.value);
   }
 
   deletePlan(id) {

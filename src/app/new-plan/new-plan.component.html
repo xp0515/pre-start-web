@@ -86,7 +86,13 @@
                 [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by time'">
-                <p-dropdown [options]="timeOptions" formControlName="note"></p-dropdown>
+                <p-dropdown [options]="timeOptions" formControlName="note" [(ngModel)]="selectedTime"></p-dropdown>
+              </div>
+              <div class="p-col-12" *ngIf="selectedTime==='Weekly'">
+                Select day of the week <p-dropdown [options]="weeklyDayOptions" formControlName="day"></p-dropdown>
+              </div>
+              <div class="p-col-12" *ngIf="selectedTime==='Monthly'">
+                On calendar date <p-dropdown [options]="monthlyDayOptions" formControlName="day"></p-dropdown>
               </div>
             </div>
             <div class="p-col-12">
@@ -97,14 +103,14 @@
                 <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
               </div>
             </div>
-            <div class="p-col-12">
+            <!-- <div class="p-col-12">
               <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
                 label="By engine hours" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
                 <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
               </div>
-            </div>
+            </div> -->
             <mat-divider></mat-divider>
           </div>
           <div class="p-col-12 text-right">
@@ -199,7 +205,15 @@
                 [disabled]="timeDisabled" [(ngModel)]="selectedFrequency">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by time'">
-                <p-dropdown [options]="timeOptions" formControlName="note"></p-dropdown>
+                <p-dropdown [options]="timeOptions" formControlName="note" [(ngModel)]="selectedTime"></p-dropdown>
+              </div>
+              <div class="p-col-12" *ngIf="selectedTime==='Weekly'">
+                Select day of the week <p-dropdown [options]="weeklyDayOptions" formControlName="day"
+                  [(ngModel)]="selectedDay"></p-dropdown>
+              </div>
+              <div class="p-col-12" *ngIf="selectedTime==='Monthly'">
+                On calendar date <p-dropdown [options]="monthlyDayOptions" formControlName="day"
+                  [(ngModel)]="selectedDay"></p-dropdown>
               </div>
             </div>
             <div class="p-col-12">
@@ -210,14 +224,14 @@
                 <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
               </div>
             </div>
-            <div class="p-col-12">
+            <!-- <div class="p-col-12">
               <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
                 label="By engine hours" [disabled]="hourDisabled" [(ngModel)]="selectedFrequency">
               </p-radioButton>
               <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
                 <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
               </div>
-            </div>
+            </div> -->
             <mat-divider></mat-divider>
           </div>
           <div class="p-col-8"></div>

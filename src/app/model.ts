@@ -33,6 +33,7 @@ export class Plan {
   frequency: {
     type: string;
     note: string;
+    day: number;
   };
   lastModified: Date;
   items: [Item];
