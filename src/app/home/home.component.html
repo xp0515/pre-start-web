@@ -106,8 +106,8 @@
             {{inspection.duration}} s
           </td>
           <td class="text-center">
-            <p-button label="View" (click)=viewInspection(inspection._id)>
-            </p-button>
+            <button pButton class="button-solbox" label="View" (click)=viewInspection(inspection._id)>
+            </button>
           </td>
 
         </tr>
@@ -121,7 +121,8 @@
         <!-- <p>Select vehicle</p> -->
       </div>
       <div class="p-col-6 text-right">
-        <p-button label="CREATE NEW PLAN" (click)="onCreatePlan()" icon="pi pi-plus"></p-button>
+        <button pButton class="button-solbox" label="CREATE NEW PLAN" (click)="onCreatePlan()"
+          icon="pi pi-plus"></button>
       </div>
     </div>
     <!-- <p>All vehicles Drop down list</p> -->
@@ -164,8 +165,8 @@
             {{plan.lastModified | date:'medium'}}
           </td>
           <td class="text-center">
-            <p-button label="Edit" [routerLink]='["/plans", plan._id]'>
-            </p-button>
+            <button pButton class="button-solbox" label="Edit" [routerLink]='["/plans", plan._id]'>
+            </button>
           </td>
 
         </tr>

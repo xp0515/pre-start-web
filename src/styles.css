@@ -59,4 +59,74 @@ p {
   -webkit-appearance: none !important;
 }
 
+.button-solbox {
+  background-color: #472F91!important;
+  border: #472F91 !important;
+	/* color: #472F91!important; */
+}
 
+.ui-tabview-selected {
+  background-color: #472F91 !important;
+  border: #472F91 !important;
+}
+
+body .ui-table .ui-sortable-column.ui-state-highlight {
+  background-color: #472F91 !important;
+}
+
+:focus {
+  outline:0 !important;
+  box-shadow: none !important;
+}
+
+.ui-paginator .ui-paginator-pages .ui-state-active{
+  background-color:#472F91!important;
+  color: white!important;
+}
+
+body .ui-multiselect-panel .ui-multiselect-items .ui-multiselect-item.ui-state-highlight {
+  color: #ffffff;
+  background-color: #472F91 !important;
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active {
+  border-color: #000000 !important;
+  background-color: #ffffff !important;
+  color: #472F91 !important;
+}
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+  border-color: #472F91 !important;
+  background-color: #472F91 !important;
+}
+
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight, body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
+  color: #ffffff;
+  background-color: #472F91 !important;
+}
+
+.ui-fileupload-choose.ui-button, .ui-fileupload-choose.ui-button .ui-widget, .ui-fileupload-choose.ui-button .ui-state-default {
+  background-color: #472F91 !important;
+  border: 1px solid #472F91 !important;
+  color: #ffffff;
+}
+
+.ui-fileupload-choose.ui-button.ui-state-hover, .ui-fileupload-choose.ui-button.ui-state-focus, .ui-fileupload-choose.ui-button.ui-state-active {
+  background-color: #472F91 !important;
+  border-color: #472F91 !important;
+}
+
+.ui-fileupload-choose.ui-button:hover {
+  background-color: #472F91 !important;
+  border: 1px solid #472F91 !important;
+}
+
+body p-fileupload .ui-button {
+  background-color: #472F91 !important;
+  border: 1px solid #472F91 !important;
+}
+
+.ui-dialog-footer .ui-button {
+  background: #472F91 !important;
+  border: 1px solid #472F91 !important;
+}

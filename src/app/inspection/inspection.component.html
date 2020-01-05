@@ -13,20 +13,20 @@
         </a>
       </div>
       <div class="p-col-8 text-right" style="position:relative;top:-50px">
-        <p-button *ngIf="inspection.status==='Pass'" label="PASS"></p-button>
-        <p-button *ngIf="inspection.finalStatus==='Fail'" label="MARK AS REPAIRED"
+        <button pButton class="button-solbox" *ngIf="inspection.status==='Pass'" label="PASS"></button>
+        <button pButton class="button-solbox" *ngIf="inspection.finalStatus==='Fail'" label="MARK AS REPAIRED"
           (click)="markAsRepaired(inspection._id)">
-        </p-button>
-        <p-button *ngIf="inspection.finalStatus==='Repaired'" icon="pi pi-check" label="REPAIRED"
-          (click)="markAsFailed(inspection._id)">
-        </p-button>
+        </button>
+        <button pButton class="button-solbox" *ngIf="inspection.finalStatus==='Repaired'" icon="pi pi-check"
+          label="REPAIRED" (click)="markAsFailed(inspection._id)">
+        </button>
         &nbsp;
-        <p-button label="EXPORT (.PDF)"></p-button>
+        <button pButton class="button-solbox" label="EXPORT (.PDF)"></button>
       </div>
     </div>
     <div class="ui-g">
       <div class="ui-g-6">
-        <h5><i class="fa fa-car " aria-hidden="true"></i>
+        <h5><i class="fa fa-car" aria-hidden="true"></i>
           {{inspection.vehicle.rego}} ({{inspection.vehicle.make}} {{inspection.vehicle.model}})</h5>
       </div>
     </div>

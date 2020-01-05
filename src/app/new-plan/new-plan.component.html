@@ -25,33 +25,22 @@
                     [ngModelOptions]="{standalone: true}"></p-multiSelect>
                 </div>
 
-                <!-- <p-scrollPanel [style]="{width: '100%', height: '200px'}">
-                  <span *ngFor="let vehicle of vehicles">
-                    <div class="p-grid p-justify-between" style="padding:10px 0">
-                      <div class="p-col-8">
-                        <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
-                          label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
-                        </p-checkbox>
-                      </div>
-                    </div>
-                    <mat-divider></mat-divider>
-                  </span>
-                </p-scrollPanel> -->
-                <div class="p-col-12 text-right">
-                  <p-button type="button" label="Add new vehicle" icon="pi pi-plus" iconPos="left"
-                    (click)="showCreateVehicleDialog()">
-                  </p-button>
-                </div>
+                <!-- add new vehicle -->
+                <!-- <div class="p-col-12 text-right">
+                  <button pButton type="button" class="button-solbox" label="Add new vehicle" icon="pi pi-plus"
+                    iconPos="left" (click)="showCreateVehicleDialog()">
+                  </button>
+                </div> -->
               </p-tabPanel>
               <p-tabPanel header="Vehicle groups">
                 <p-tree [value]="data" selectionMode="checkbox" [(selection)]="selectedTreeVehicles"
                   (onNodeSelect)="onNodeSelect($event)"></p-tree>
-                <!-- <div>Selected Nodes: <span *ngFor="let vehicle of selectedTreeVehicles">{{vehicle.data}} </span></div> -->
-                <div class="p-col-12 text-right">
-                  <p-button type="button" label="Add new vehicle group" icon="pi pi-plus" iconPos="left"
-                    (click)="showCreateVehicleGroupDialog()">
-                  </p-button>
-                </div>
+                <!-- add new vehicle group-->
+                <!-- <div class="p-col-12 text-right">
+                  <button pButton type="button" class="button-solbox" label="Add new vehicle group" icon="pi pi-plus"
+                    iconPos="left" (click)="showCreateVehicleGroupDialog()">
+                  </button>
+                </div> -->
               </p-tabPanel>
             </p-tabView>
           </div>
@@ -75,9 +64,9 @@
             </span>
           </div>
           <div class="p-col-12 text-right">
-            <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
-              (click)="showCreateItemDialog()">
-            </p-button>
+            <button pButton class="button-solbox" type="button" label="Add new inspection item" icon="pi pi-plus"
+              iconPos="left" (click)="showCreateItemDialog()">
+            </button>
           </div>
           <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
@@ -103,18 +92,11 @@
                 <input type="text" pInputText formControlName="note" placeholder="Mileage" /> km
               </div>
             </div>
-            <!-- <div class="p-col-12">
-              <p-radioButton id="byHoursButton" name="frequency" formControlName="type" value="by engine hours"
-                label="By engine hours" [(ngModel)]="selectedFrequency" (click)="resetFrequency()">
-              </p-radioButton>
-              <div class="p-col-12" *ngIf="selectedFrequency==='by engine hours'">
-                <input type="text" pInputText formControlName="note" placeholder="Engine Hours" /> h
-              </div>
-            </div> -->
+
             <mat-divider></mat-divider>
           </div>
           <div class="p-col-12 text-right">
-            <button pButton type="submit" label="Save" [disabled]="!planForm.valid"></button>
+            <button pButton class="button-solbox" type="submit" label="Save" [disabled]="!planForm.valid"></button>
           </div>
         </div>
       </form>
@@ -144,33 +126,22 @@
                     [ngModelOptions]="{standalone: true}"></p-multiSelect>
                 </div>
 
-                <!-- <p-scrollPanel [style]="{width: '100%', height: '200px'}">
-                    <span *ngFor="let vehicle of vehicles">
-                      <div class="p-grid p-justify-between" style="padding:10px 0">
-                        <div class="p-col-8">
-                          <p-checkbox [formControl]="planForm.controls['vehicles']" value="{{vehicle._id}}"
-                            label="{{vehicle.rego}} {{vehicle.make}} {{vehicle.model}}" [(ngModel)]="selectedVehicles">
-                          </p-checkbox>
-                        </div>
-                      </div>
-                      <mat-divider></mat-divider>
-                    </span>
-                  </p-scrollPanel> -->
-                <div class="p-col-12 text-right">
-                  <p-button type="button" label="Add new vehicle" icon="pi pi-plus" iconPos="left"
-                    (click)="showCreateVehicleDialog()">
-                  </p-button>
-                </div>
+                <!-- add new vehicle
+                  <div class="p-col-12 text-right">
+                  <button pButton class="button-solbox" type="button" label="Add new vehicle" icon="pi pi-plus"
+                    iconPos="left" (click)="showCreateVehicleDialog()">
+                  </button>
+                </div> -->
               </p-tabPanel>
               <p-tabPanel header="Vehicle groups">
                 <p-tree [value]="data" selectionMode="checkbox" [(selection)]="selectedTreeVehicles"
                   (onNodeSelect)="onNodeSelect($event)"></p-tree>
-                <!-- <div>Selected Nodes: <span *ngFor="let vehicle of selectedTreeVehicles">{{vehicle.data}} </span></div> -->
-                <div class="p-col-12 text-right">
-                  <p-button type="button" label="Add new vehicle group" icon="pi pi-plus" iconPos="left"
-                    (click)="showCreateVehicleGroupDialog()">
-                  </p-button>
-                </div>
+                <!-- add new vehicle group
+                  <div class="p-col-12 text-right">
+                  <button pButton class="button-solbox" type="button" label="Add new vehicle group" icon="pi pi-plus"
+                    iconPos="left" (click)="showCreateVehicleGroupDialog()">
+                  </button>
+                </div> -->
               </p-tabPanel>
             </p-tabView>
           </div>
@@ -194,9 +165,9 @@
             </span>
           </div>
           <div class="p-col-12 text-right">
-            <p-button type="button" label="Add new inspection item" icon="pi pi-plus" iconPos="left"
-              (click)="showCreateItemDialog()">
-            </p-button>
+            <button pButton class="button-solbox" type="button" label="Add new inspection item" icon="pi pi-plus"
+              iconPos="left" (click)="showCreateItemDialog()">
+            </button>
           </div>
           <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
@@ -239,7 +210,8 @@
               style="width:100%" (click)="confirmDeletePlan(plan._id)"></button>
           </div>
           <div class="p-col-2 text-right">
-            <button pButton type="submit" label="Save" style="width:100%" [disabled]="!planForm.valid"></button>
+            <button pButton class="button-solbox" type="submit" label="Save" style="width:100%"
+              [disabled]="!planForm.valid"></button>
           </div>
         </div>
       </form>
@@ -291,7 +263,8 @@
     </form>
     <p-footer>
       <div>
-        <button pButton type="submit" form="itemForm" label="Save" [disabled]="!itemForm.valid"></button>
+        <button pButton type="submit" class="button-solbox" form="itemForm" label="Save"
+          [disabled]="!itemForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>
@@ -325,7 +298,8 @@
     </form>
     <p-footer>
       <div>
-        <button pButton type="submit" form="newitemForm" label="Save" [disabled]="!itemForm.valid"></button>
+        <button pButton type="submit" class="button-solbox" form="newitemForm" label="Save"
+          [disabled]="!itemForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>
@@ -349,7 +323,8 @@
     </form>
     <p-footer>
       <div>
-        <button pButton type="submit" form="newVehicleForm" label="Save" [disabled]="!vehicleForm.valid"></button>
+        <button pButton type="submit" class="button-solbox" form="newVehicleForm" label="Save"
+          [disabled]="!vehicleForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>
@@ -374,7 +349,8 @@
           New Vehicle group name: <input type="text" pInputText [(ngModel)]="groupName" />
         </div>
         <div class="ui-g-1">
-          <button pButton label="Save" (click)="createVehicleGroup()" [disabled]="!groupName"></button>
+          <button pButton class="button-solbox" label="Save" (click)="createVehicleGroup()"
+            [disabled]="!groupName"></button>
         </div>
       </div>
     </p-footer>
