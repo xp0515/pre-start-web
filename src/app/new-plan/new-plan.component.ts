@@ -53,7 +53,6 @@ export class NewPlanComponent implements OnInit {
     //{ label: 'Custom period', value: 'Some value' },
   ];
   weeklyDayOptions = [
-    // { label: '', value: '' },
     { label: 'Monday', value: 1 },
     { label: 'Tueday', value: 2 },
     { label: 'Wednesday', value: 3 },
@@ -203,7 +202,7 @@ export class NewPlanComponent implements OnInit {
         this.itemForm.patchValue({ client: this.client });
         this.editDisplay = true;
         if (this.item.img) {
-          this.imgSrc = `https://pre-start-api.azurewebsites.net/file/${this.item.img}`;
+          this.imgSrc = `https://prestartcheck.s3-ap-southeast-2.amazonaws.com/${this.item.img}`;
         }
       });
   }
@@ -315,7 +314,6 @@ export class NewPlanComponent implements OnInit {
     if (note !== 'Weekly' && note !== 'Monthly') {
       this.planForm.patchValue({ frequency: { day: null } });
     }
-    console.log(this.planForm.value);
   }
 
   deletePlan(id) {
@@ -378,7 +376,8 @@ export class NewPlanComponent implements OnInit {
 
   onUpload() {
     const formData = new FormData();
-    formData.append('file', this.itemForm.get('img').value);
+    const fileName = new Date().getTime() + this.itemForm.value.img.name;
+    formData.append('file', this.uploadedFiles[0], fileName);
     this.uploadService.uploadFile(formData).subscribe(
       (event: HttpEvent<any>) => {
         switch (event.type) {
@@ -394,7 +393,7 @@ export class NewPlanComponent implements OnInit {
             break;
           case HttpEventType.Response:
             console.log('Image successfully uploaded!', event.body);
-            this.itemForm.get('img').setValue(event.body.file.filename);
+            this.itemForm.patchValue({ img: fileName });
             setTimeout(() => {
               this.fileUploadProgress = null;
             }, 1500);
