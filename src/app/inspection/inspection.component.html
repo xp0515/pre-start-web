@@ -4,7 +4,7 @@
   <p-progressSpinner></p-progressSpinner>
 </div>
 
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading" id="capture">
   <p-card header="Inspection" *ngIf="inspection" [style]="{width: '600px'}">
     <div class="p-grid p-justify-end">
       <div class="p-col-4">
@@ -21,7 +21,7 @@
           label="REPAIRED" (click)="markAsFailed(inspection._id)">
         </button>
         &nbsp;
-        <button pButton class="button-solbox" label="EXPORT (.PDF)"></button>
+        <button pButton class="button-solbox" label="EXPORT (.PDF)" (click)="exportPDF()"></button>
       </div>
     </div>
     <div class="ui-g">

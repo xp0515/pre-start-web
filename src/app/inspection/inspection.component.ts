@@ -4,6 +4,8 @@ import { Inspection } from '../model';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfirmationService } from 'primeng/api';
+import html2canvas from 'html2canvas';
+import pdfMake from 'pdfmake/build/pdfmake';
 
 @Component({
   selector: 'app-inspection',
@@ -52,6 +54,20 @@ export class InspectionComponent implements OnInit {
   markAsFailed(id) {
     this.inspection.finalStatus = 'Fail';
     this.inspectionService.updateInspection(this.clientId, id, this.inspection).subscribe(() => this.router.navigate(['']));
+  }
+
+  exportPDF() {
+    html2canvas(document.querySelector('#capture')).then(canvas => {
+      // document.body.appendChild(canvas);
+      const data = canvas.toDataURL();
+      const docDefinition = {
+        content: [{
+          image: data,
+          width: 700
+        }]
+      };
+      pdfMake.createPdf(docDefinition).download(`${this.inspectionId}.pdf`);
+    });
   }
 
   confirmDeleteItem(id) {
