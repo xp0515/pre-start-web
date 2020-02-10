@@ -32,7 +32,6 @@ export class InspectionComponent implements OnInit {
       this.inspectionId = paramMap.get('id');
       this.inspectionService.getInpection(this.clientId, this.inspectionId).subscribe(inspection => {
         this.inspection = inspection;
-        console.log(this.inspection);
         const units = new Uint8Array(this.inspection.signature.data);
         this.signatureUrl = this.domSanitizationService
           .bypassSecurityTrustUrl('data:image/jpg;base64, ' + btoa(String.fromCharCode.apply(null, units)));
