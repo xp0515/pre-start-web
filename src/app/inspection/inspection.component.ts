@@ -58,7 +58,6 @@ export class InspectionComponent implements OnInit {
 
   exportPDF() {
     html2canvas(document.querySelector('#capture')).then(canvas => {
-      // document.body.appendChild(canvas);
       const data = canvas.toDataURL();
       const docDefinition = {
         content: [{

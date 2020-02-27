@@ -12,7 +12,15 @@ export class NavMenuComponent implements OnInit {
   client;
   name = localStorage.getItem('name');
   email = localStorage.getItem('email');
+  display = false;
+  clientName = '';
+  admin = '';
+  users = [
 
+  ];
+  mobileNotification = '';
+  emailNotification = '';
+  declaration = '';
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
@@ -26,6 +34,14 @@ export class NavMenuComponent implements OnInit {
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  showDialog() {
+    this.display = true;
+  }
+
+  saveSettings() {
+
   }
 
   onLogOut() {

@@ -9,7 +9,7 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"show": isExpanded}'>
         <ul class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]'>Admin</a>
+            <a class="nav-link text-dark" style="cursor: pointer" (click)="showDialog()">Admin</a>
           </li>
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
             <a *ngIf="client" style="cursor: pointer" class="nav-link text-dark"
@@ -41,3 +41,33 @@
   <!-- </div>
   </div> -->
 </p-overlayPanel>
+
+<p-dialog header="Settings" [(visible)]="display" styleClass="mydialog" modal="true" responsive="true">
+  <div class="ui-g">
+    <div class="ui-g-4">Name</div>
+    <div class="ui-g-8">
+      <input type="text" pInputText [(ngModel)]="clientName" style="width:100%" />
+    </div>
+    <div class="ui-g-4">Admin</div>
+    <div class="ui-g-8">
+      <p-dropdown [options]="users" [(ngModel)]="admin" [style]="{'width':'100%'}"></p-dropdown>
+    </div>
+    <div class="ui-g-4">Mobile</div>
+    <div class="ui-g-8">
+      <input type="text" pInputText [(ngModel)]="mobileNotification" style="width:100%" />
+    </div>
+    <div class="ui-g-4">Email</div>
+    <div class="ui-g-8">
+      <input type="text" pInputText [(ngModel)]="emailNotification" style="width:100%" />
+    </div>
+    <div class="ui-g-4">declaration</div>
+    <div class="ui-g-8">
+      <textarea pInputTextarea [(ngModel)]="declaration" style="width:100%"></textarea>
+    </div>
+  </div>
+  <p-footer>
+    <div>
+      <button pButton type="submit" class="button-solbox" label="Save" (click)="saveSettings()"></button>
+    </div>
+  </p-footer>
+</p-dialog>
