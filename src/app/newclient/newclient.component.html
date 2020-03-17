@@ -1,0 +1,16 @@
+<form [formGroup]="clientForm" (ngSubmit)="createClient()">
+  <p>Name</p>
+  <input size="30" formControlName="name">
+  <p>Declaration</p>
+  <textarea pInputTextarea rows="15" cols="30" formControlName="declaration"></textarea>
+  <!-- <p>Logo</p>
+  <input size="30" pInputText formControlName="logo"> -->
+  <p>Admin</p>
+  <p-dropdown [options]="userOptions" formControlName="admin" placeholder="Select admin" appendTo="body">
+  </p-dropdown>
+
+  <div>
+    <p></p>
+    <p-button label="Save" [disabled]="!clientForm.valid"></p-button>
+  </div>
+</form>

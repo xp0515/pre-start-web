@@ -1,0 +1,34 @@
+[
+  {
+    "id": 58,
+    "name": "New trailer",
+    "lat": null,
+    "lng": null,
+    "LastOnlineODB": null,
+    "TrailerType": "A",
+    "Regonr": "123456",
+    "vehicleId": null,
+    "TrolleysMax": null,
+    "vehicleName": null,
+    "TrackerID": null,
+    "battery": null,
+    "phone": null,
+    "validGPS": null
+  },
+  {
+    "id": 71,
+    "name": "IPSec Pentest",
+    "lat": null,
+    "lng": null,
+    "LastOnlineODB": null,
+    "TrailerType": "IPSEC",
+    "Regonr": "12345",
+    "vehicleId": null,
+    "TrolleysMax": null,
+    "vehicleName": null,
+    "TrackerID": -123,
+    "battery": null,
+    "phone": null,
+    "validGPS": null
+  }
+]
