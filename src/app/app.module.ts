@@ -5,6 +5,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth-interceptor';
+import { AdminGuard } from './auth/admin.guard';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -13,6 +15,7 @@ import { NewPlanComponent } from './new-plan/new-plan.component';
 import { InspectionComponent } from './inspection/inspection.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { NewClientComponent } from './newclient/newclient.component';
 
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
@@ -52,7 +55,8 @@ import { PickListModule } from 'primeng/picklist';
     NewPlanComponent,
     InspectionComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NewClientComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -64,6 +68,8 @@ import { PickListModule } from 'primeng/picklist';
       { path: 'new-plan/:clientId', component: NewPlanComponent, canActivate: [AuthGuard] },
       { path: 'plans/:id', component: NewPlanComponent, canActivate: [AuthGuard] },
       { path: 'inspections/:clientId/:id', component: InspectionComponent, canActivate: [AuthGuard] },
+      { path: 'register', component: RegisterComponent, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'newclient', component: NewClientComponent, canActivate: [AuthGuard, AdminGuard] },
       { path: '**', redirectTo: '' }
     ]),
     TabViewModule,
@@ -98,6 +104,7 @@ import { PickListModule } from 'primeng/picklist';
   providers: [
     ConfirmationService,
     MessageService,
+    CookieService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard,
   ],

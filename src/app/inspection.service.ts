@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inspection, Vehicle, Plan, Item, User } from './model';
 import { environment } from '../environments/environment';
 
 const url = environment.apiUrl;
-//const clientId = localStorage.getItem('client');
 
 @Injectable({
   providedIn: 'root'
@@ -95,6 +94,39 @@ export class InspectionService {
 
   getVehicleGroup(clientId) {
     return this.http.get<any>(`${url}vehiclegroup/${clientId}`);
+  }
+
+  check() {
+    //   return this.http.get('http://login.solbox.it/API/getcounts');
+    return this.http.get('http://login.solbox.it/API/Orders/getOrder/82086');
+    // const order = {
+    //   id: -1,
+    //   TypeId: 1,
+    //   StatusId: 0,
+    //   DeliveryClientID: 5918,
+    //   dest_lat: -33.795647,
+    //   dest_lng: 150.918869,
+    //   dest_address: '',
+    //   DeliveryTime: null,
+    //   pickup_lat: -33.795647,
+    //   pickup_lng: 150.918869,
+    //   PickupClientID: 5193,
+    //   PickupTime: null,
+    //   PayerID: 5856,
+    //   AddInfo: '',
+    //   CustomerReference: '',
+    //   OrderDetails: '',
+    //   PickupServiceTime: 10,
+    //   DeliveryServiceTime: 10,
+    //   DeliveryTolerance: 60,
+    //   PickupTolerance: 60,
+    //   delivery_not_emails: '',
+    //   delivery_not_sms: '',
+    //   pickup_not_emails: '',
+    //   pickup_not_sms: ''
+    // }
+
+    // return this.http.post('http://login.solbox.it/API/Orders/Saveorder', order);
   }
 
 }

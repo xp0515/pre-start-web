@@ -1,1 +1,21 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" (ngSubmit)="signup()">
+  <p>Email</p>
+  <input type="email" size="30" formControlName="email">
+  <p>Password</p>
+  <input type="password" size="30" pInputText formControlName="password">
+  <p>Name</p>
+  <input size="30" pInputText formControlName="name">
+  <p>Mobile</p>
+  <input size="30" pInputText formControlName="mobile">
+  <p>Permission</p>
+  <p-dropdown [options]="permissionOptions" formControlName="permission" placeholder="Select client" appendTo="body">
+  </p-dropdown>
+  <p>Client</p>
+  <p-dropdown [options]="clientOptions" formControlName="client" placeholder="Select client" appendTo="body">
+  </p-dropdown>
+
+  <div>
+    <p></p>
+    <p-button label="Register" [disabled]="!registerForm.valid"></p-button>
+  </div>
+</form>

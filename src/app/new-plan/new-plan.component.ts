@@ -67,12 +67,14 @@ export class NewPlanComponent implements OnInit {
   fileUploadProgress: number = null;
   tabIndex = 0;
   vehicleOptions: SelectItem[];
+  clientOptions: SelectItem[];
   data: TreeNode[] = [];
   selectedTreeVehicles: TreeNode[];
   sourceVehicleList: Vehicle[];
   targetVehicleList: Vehicle[];
   groupVehicleList = [];
   groupName = '';
+  permission = localStorage.getItem('permission');
 
   constructor(
     private fb: FormBuilder,
@@ -111,6 +113,13 @@ export class NewPlanComponent implements OnInit {
         //console.log(this.data);
       }
     });
+    this.userService.getClients().subscribe(clients => {
+      this.clientOptions = [];
+      clients.forEach(client => this.clientOptions.push({
+        label: client.name,
+        value: client
+      }));
+    });
     this.planForm = this.fb.group({
       title: new FormControl('', Validators.required),
       items: new FormControl('', Validators.required),
@@ -132,8 +141,8 @@ export class NewPlanComponent implements OnInit {
     });
     this.vehicleForm = this.fb.group({
       rego: new FormControl('', [Validators.required, Validators.maxLength(10)]),
-      make: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-      model: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      make: new FormControl(''),
+      model: new FormControl(''),
       client: new FormControl(''),
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -252,7 +261,7 @@ export class NewPlanComponent implements OnInit {
   }
 
   createVehicle() {
-    this.vehicleForm.patchValue({ client: this.client });
+    // this.vehicleForm.patchValue({ client: this.client });
     this.inspectionService.createVehicle(this.vehicleForm.value)
       .subscribe(res => {
         this.vehicles.push(res);

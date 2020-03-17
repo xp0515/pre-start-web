@@ -42,32 +42,45 @@
   </div> -->
 </p-overlayPanel>
 
-<p-dialog header="Settings" [(visible)]="display" styleClass="mydialog" modal="true" responsive="true">
-  <div class="ui-g">
-    <div class="ui-g-4">Name</div>
-    <div class="ui-g-8">
-      <input type="text" pInputText [(ngModel)]="clientName" style="width:100%" />
-    </div>
-    <div class="ui-g-4">Admin</div>
+<form [formGroup]="clientForm" (ngSubmit)="editCompany()">
+  <p-dialog header="Settings" [(visible)]="display" styleClass="mydialog" modal="true" responsive="true">
+    <div class="ui-g">
+      <div class="ui-g-4">Company Name</div>
+      <div class="ui-g-8">
+        <input type="text" pInputText formControlName="name" style="width:100%" />
+      </div>
+      <!-- <div class="ui-g-4">Admin</div>
     <div class="ui-g-8">
       <p-dropdown [options]="users" [(ngModel)]="admin" [style]="{'width':'100%'}"></p-dropdown>
+    </div> -->
+      <div class="ui-g-4">Mobile Notification</div>
+      <div class="ui-g-8">
+        <input type="text" pInputText formControlName="mobile" style="width:100%" />
+      </div>
+      <div class="ui-g-4">Email Notification</div>
+      <div class="ui-g-8">
+        <input type="text" pInputText formControlName="email" style="width:100%" />
+      </div>
+      <div class="ui-g-4">Driver's Declaration</div>
+      <div class="ui-g-8">
+        <textarea pInputTextarea rows="15" formControlName="declaration" style="width:100%"></textarea>
+      </div>
+      <!-- <div class="ui-g-4">
+        <p>Upload Logo <br /><small class="grey">Upload before save</small></p>
+      </div>
+      <div class="ui-g-8">
+        <p-progressBar *ngIf="fileUploadProgress" [value]="fileUploadProgress"></p-progressBar>
+        <p-fileUpload [files]="uploadedFiles" customUpload="true" name="img" (onSelect)="onFileSelect($event)"
+          (uploadHandler)="onUpload()">
+        </p-fileUpload>
+      </div> -->
     </div>
-    <div class="ui-g-4">Mobile</div>
-    <div class="ui-g-8">
-      <input type="text" pInputText [(ngModel)]="mobileNotification" style="width:100%" />
-    </div>
-    <div class="ui-g-4">Email</div>
-    <div class="ui-g-8">
-      <input type="text" pInputText [(ngModel)]="emailNotification" style="width:100%" />
-    </div>
-    <div class="ui-g-4">declaration</div>
-    <div class="ui-g-8">
-      <textarea pInputTextarea [(ngModel)]="declaration" style="width:100%"></textarea>
-    </div>
-  </div>
-  <p-footer>
-    <div>
-      <button pButton type="submit" class="button-solbox" label="Save" (click)="saveSettings()"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+    <p-footer>
+      <div>
+        <button pButton class="button-solbox" [routerLink]='["/newclient"]' label="New Client"></button>
+        <button pButton class="button-solbox" [routerLink]='["/register"]' label="New User"></button>
+        <button pButton type="submit" class="button-solbox" label="Save"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</form>

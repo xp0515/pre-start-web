@@ -26,21 +26,21 @@
                 </div>
 
                 <!-- add new vehicle -->
-                <!-- <div class="p-col-12 text-right">
+                <div class="p-col-12 text-right" *ngIf="permission==='1'">
                   <button pButton type="button" class="button-solbox" label="Add new vehicle" icon="pi pi-plus"
                     iconPos="left" (click)="showCreateVehicleDialog()">
                   </button>
-                </div> -->
+                </div>
               </p-tabPanel>
               <p-tabPanel header="Vehicle groups">
                 <p-tree [value]="data" selectionMode="checkbox" [(selection)]="selectedTreeVehicles"
                   (onNodeSelect)="onNodeSelect($event)"></p-tree>
                 <!-- add new vehicle group-->
-                <!-- <div class="p-col-12 text-right">
+                <div class="p-col-12 text-right" *ngIf="permission==='1'">
                   <button pButton type="button" class="button-solbox" label="Add new vehicle group" icon="pi pi-plus"
                     iconPos="left" (click)="showCreateVehicleGroupDialog()">
                   </button>
-                </div> -->
+                </div>
               </p-tabPanel>
             </p-tabView>
           </div>
@@ -318,6 +318,11 @@
         <div class="ui-g-4">Model</div>
         <div class="ui-g-8">
           <input type="text" pInputText formControlName="model" style="width:100%" />
+        </div>
+        <div class="ui-g-4">Client</div>
+        <div class="ui-g-8">
+          <p-dropdown [options]="clientOptions" formControlName="client" placeholder="Select client" appendTo="body">
+          </p-dropdown>
         </div>
       </div>
     </form>

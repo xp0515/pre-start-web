@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpBackend } from '@angular/common/http';
 import { AuthData, Client } from './model';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 const url = environment.apiUrl;
 
@@ -22,23 +23,34 @@ export class UserService {
   private authStatusListener = new Subject<boolean>();
   message = new BehaviorSubject<string>(null);
 
-  constructor(private http: HttpClient, private router: Router) { }
+  private httpClient: HttpClient;
 
-  register(email: string, password: string) {
-    const authData: AuthData = { email, password };
-    return this.http.post(url + 'user/signup', authData);
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private cookieService: CookieService,
+    private handler: HttpBackend
+  ) {
+    this.httpClient = new HttpClient(handler);
+  }
+
+  register(user) {
+    // const authData: AuthData = { email, password };
+    return this.http.post(url + 'user/signup', user);
   }
 
   login(email: string, password: string) {
+    // this.setCookies().subscribe(res => console.log(res));
     const authData: AuthData = { email, password };
     // tslint:disable-next-line: max-line-length
-    this.http.post<{ token: string, email: string, message: string, name: string, mobile: string, client: string }>(url + 'user/login', authData)
+    this.http.post<{ token: string, email: string, message: string, name: string, mobile: string, permission: number, client: string }>(url + 'user/login', authData)
       .subscribe(res => {
         const token = {
           token: res.token,
           email: res.email,
           name: res.name,
           mobile: res.mobile,
+          permission: res.permission,
           client: res.client
         };
         this.setToken(token);
@@ -91,6 +103,7 @@ export class UserService {
     localStorage.setItem('email', this.email);
     localStorage.setItem('name', this.name);
     localStorage.setItem('mobile', this.mobile);
+    localStorage.setItem('permission', this.permission.toString());
     localStorage.setItem('client', this.client);
     this.isAuthenticated = true;
   }
@@ -124,7 +137,40 @@ export class UserService {
     return this.http.get<Client>(`${url}client/${id}`);
   }
 
+  getClients() {
+    return this.http.get<Client[]>(`${url}clients`);
+  }
+
+  createClient(client) {
+    return this.http.post<Client>(`${url}client`, client);
+  }
+
+  updateClient(client, clientId) {
+    return this.http.put<Client>(`${url}client/${clientId}`, client);
+  }
+
   getDrivers(clientId) {
     return this.http.get<any>(`${url}user/client/${clientId}`);
+  }
+
+  getAdmins() {
+    return this.http.get<any>(`${url}user/admins`);
+  }
+
+  setCookies() {
+    let body = new URLSearchParams()
+    body.set('APIKEY', 'd12fa0fa7ceb45718c734c12945b953e');
+    body.set('AccountName', 'Solbox');
+    body.set('UserName', 'solboxdev');
+    body.set('password', 'solbox@dev');
+
+    let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    };
+
+    // console.log(body);
+    return this.httpClient.post('https://login.solbox.it/API/Auth/login', body.toString(), options);
+    this.cookieService.set('ASP.NET_SessionId', 'fn0fplvygbzalyihu3tcii4c');
+    this.cookieService.set('.ASPXAUTH', 'auC3xPDsNZt85oJ-pVTOihNJihvOx-UB45WGvmlFoICFqqfPUFXuffa46nJV5cJiPrEeB9Uv4A-JnoA45uFsPYkNOemcl8GvHoVIgravSKAglK5W06iJxkBhIV_RfAZFvmg9se73OQwfi500OjRvmxzP4dAYCurO4kJYq9TqO-9mKE76zf52_LgjvMKluIiOnHilhjVwOUBQv-QzMN1t7dXKX0i199fhzGa_HduphPAUn9OtEex7Y4TyQPps0ujUpB19BarugitiLo3pYSnUJMcRsDSTpFYcQsjPwxwHSyiEfXlpHqnieN0_lKUErkIyKSnEFy1tJQpz0ydQzPCXKg');
   }
 }

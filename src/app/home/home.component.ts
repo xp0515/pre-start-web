@@ -78,7 +78,9 @@ export class HomeComponent {
 
     this.inspectionService.getVehicles(this.clientId).subscribe(vehicles => {
       this.vehicleOptions = [];
-      vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
+      if (vehicles) {
+        vehicles.forEach(vehicle => this.vehicleOptions.push({ label: vehicle.rego, value: vehicle.rego }));
+      }
     });
 
     this.userService.getDrivers(this.clientId).subscribe(drivers => {
@@ -119,6 +121,9 @@ export class HomeComponent {
     }, 250);
   }
 
+  // check() {
+  //   this.inspectionService.check().subscribe(res => console.log(res));
+  //   this.userService.setCookies().subscribe(res => console.log(res));
+  // }
+
 }
-
-

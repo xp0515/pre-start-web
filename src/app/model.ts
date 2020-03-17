@@ -74,6 +74,9 @@ export class Client {
   name: string;
   admin: User;
   logo: string;
+  declaration: string;
+  email: string;
+  mobile: string;
 }
 
 export class AuthData {
