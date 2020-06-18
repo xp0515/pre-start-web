@@ -7,8 +7,11 @@ export class Inspection {
   startTime: Date;
   endTime: Date;
   odometer: number;
+  load: number;
   performedBy: User;
   duration: number;
+  latitude: number;
+  longitude: number;
   location: string;
   result: {
     item: Item;
