@@ -59,13 +59,13 @@ export class NavMenuComponent implements OnInit {
   }
 
   editCompany() {
-    console.log(this.clientForm.value);
-    this.userService.updateClient(this.clientForm.value, this.client._id).subscribe(res => console.log(res));
+    this.userService.updateClient(this.clientForm.value, this.client._id).subscribe(() => {
+      this.display = false;
+    });
   }
 
   onLogOut() {
     this.userService.logout();
-    //this.router.navigate(['']);
   }
 
   onFileSelect(event) {

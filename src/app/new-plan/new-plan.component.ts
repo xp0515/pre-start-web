@@ -34,9 +34,11 @@ export class NewPlanComponent implements OnInit {
   editDisplay = false;
   createItemDisplay = false;
   createVehicleDisplay = false;
+  editVehicleDisplay = false;
   createVehicleGroupDisplay = false;
   mode = 'create';
   planId;
+  vehicleId;
   plan: Plan;
   selectedItems = [];
   vehicles: Vehicle[] = [];
@@ -143,6 +145,7 @@ export class NewPlanComponent implements OnInit {
       rego: new FormControl('', [Validators.required, Validators.maxLength(10)]),
       make: new FormControl(''),
       model: new FormControl(''),
+      maxLoad: new FormControl(''),
       client: new FormControl(''),
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -261,13 +264,20 @@ export class NewPlanComponent implements OnInit {
   }
 
   createVehicle() {
-    // this.vehicleForm.patchValue({ client: this.client });
     this.inspectionService.createVehicle(this.vehicleForm.value)
       .subscribe(res => {
         this.vehicles.push(res);
         this.vehicleForm.reset();
         this.createVehicleDisplay = false;
       });
+  }
+
+  editVehicle() {
+    this.inspectionService.updateVehicle(this.vehicleForm.value, this.vehicleId).subscribe(res => {
+      this.editVehicleDisplay = false;
+      this.vehicleForm.reset();
+      this.vehicleId = null;
+    });
   }
 
   createVehicleGroup() {
@@ -354,6 +364,18 @@ export class NewPlanComponent implements OnInit {
   showCreateVehicleDialog() {
     this.vehicleForm.reset();
     this.createVehicleDisplay = true;
+  }
+
+  showEditVehicleDialog(id) {
+    this.inspectionService.getVehicle(this.clientId, id).subscribe(vehicle => {
+      this.vehicleForm.get('rego').setValue(vehicle.rego);
+      this.vehicleForm.get('make').setValue(vehicle.make);
+      this.vehicleForm.get('model').setValue(vehicle.model);
+      this.vehicleForm.get('maxLoad').setValue(vehicle.maxLoad);
+      this.vehicleForm.get('client').setValue(vehicle.client.name);
+      this.vehicleId = id;
+      this.editVehicleDisplay = true;
+    });
   }
 
   showCreateVehicleGroupDialog() {

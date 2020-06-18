@@ -56,6 +56,13 @@ export class InspectionService {
     return this.http.get<Vehicle[]>(`${url}vehicles/${clientId}`);
   }
 
+  getVehicle(clientId, id) {
+    return this.http.get<Vehicle>(`${url}vehicles/${clientId}/${id}`);
+  }
+
+  updateVehicle(vehicle, id) {
+    return this.http.put<Vehicle>(`${url}vehicles/${id}`, vehicle);
+  }
   createVehicle(vehicle) {
     return this.http.post<Vehicle>(`${url}vehicle`, vehicle);
   }

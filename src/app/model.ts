@@ -7,8 +7,11 @@ export class Inspection {
   startTime: Date;
   endTime: Date;
   odometer: number;
+  load: number;
   performedBy: User;
   duration: number;
+  latitude: number;
+  longitude: number;
   location: string;
   result: {
     item: Item;
@@ -45,6 +48,7 @@ export class Vehicle {
   _id: string;
   make: string;
   model: string;
+  maxLoad: number;
   rego: string;
   client: Client;
 }

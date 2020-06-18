@@ -122,8 +122,11 @@ export class HomeComponent {
   }
 
   // check() {
-  //   this.inspectionService.check().subscribe(res => console.log(res));
-  //   this.userService.setCookies().subscribe(res => console.log(res));
+
+  //   this.userService.setCookies().subscribe(res => {
+  //     console.log(res);
+  //     this.inspectionService.check().subscribe(res => console.log(res));
+  //   });
   // }
 
 }

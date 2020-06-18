@@ -22,7 +22,13 @@
                 <mat-divider></mat-divider>
                 <div class="p-col-12">
                   <p-multiSelect [options]="vehicleOptions" [(ngModel)]="selectedVehicles"
-                    [ngModelOptions]="{standalone: true}"></p-multiSelect>
+                    [ngModelOptions]="{standalone: true}">
+                    <ng-template let-vehicle pTemplate="item">
+                      {{vehicle.label}}
+                      <i class="pi pi-pencil" (click)="showEditVehicleDialog(vehicle.value)"
+                        style="cursor: pointer"></i>
+                    </ng-template>
+                  </p-multiSelect>
                 </div>
 
                 <!-- add new vehicle -->
@@ -123,7 +129,13 @@
                 <mat-divider></mat-divider>
                 <div class="p-col-12">
                   <p-multiSelect [options]="vehicleOptions" [(ngModel)]="selectedVehicles"
-                    [ngModelOptions]="{standalone: true}"></p-multiSelect>
+                    [ngModelOptions]="{standalone: true}">
+                    <ng-template let-vehicle pTemplate="item">
+                      {{vehicle.label}}
+                      <i class="pi pi-pencil" (click)="showEditVehicleDialog(vehicle.value)"
+                        style="cursor: pointer"></i>
+                    </ng-template>
+                  </p-multiSelect>
                 </div>
 
                 <!-- add new vehicle
@@ -319,6 +331,10 @@
         <div class="ui-g-8">
           <input type="text" pInputText formControlName="model" style="width:100%" />
         </div>
+        <div class="ui-g-4">MaxLoad</div>
+        <div class="ui-g-8">
+          <input type="number" pInputText formControlName="maxLoad" style="width:100%" />
+        </div>
         <div class="ui-g-4">Client</div>
         <div class="ui-g-8">
           <p-dropdown [options]="clientOptions" formControlName="client" placeholder="Select client" appendTo="body">
@@ -357,6 +373,39 @@
           <button pButton class="button-solbox" label="Save" (click)="createVehicleGroup()"
             [disabled]="!groupName"></button>
         </div>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="Edit vehicle" [(visible)]="editVehicleDisplay" modal="true" [style]="{width: '600px'}">
+    <form [formGroup]="vehicleForm" id="editVehicleForm" (ngSubmit)="editVehicle()">
+      <div class="ui-g">
+        <div class="ui-g-4">Rego</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="rego" style="width:100%" disabled />
+        </div>
+        <div class="ui-g-4">Make</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="make" style="width:100%" disabled />
+        </div>
+        <div class="ui-g-4">Model</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="model" style="width:100%" disabled />
+        </div>
+        <div class="ui-g-4">MaxLoad</div>
+        <div class="ui-g-8">
+          <input type="number" pInputText formControlName="maxLoad" style="width:100%" />
+        </div>
+        <div class="ui-g-4">Client</div>
+        <div class="ui-g-8">
+          <input type="text" pInputText formControlName="client" style="width:100%" disabled />
+        </div>
+      </div>
+    </form>
+    <p-footer>
+      <div>
+        <button pButton type="submit" class="button-solbox" form="editVehicleForm" label="Save"
+          [disabled]="!vehicleForm.valid"></button>
       </div>
     </p-footer>
   </p-dialog>
