@@ -30,6 +30,16 @@
           <input type="text" pInputText size="50" placeholder="Global Filter"
             (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
         </div>
+        <div class="ui-helper-clearfix" style="text-align: left">
+          <button type="button" class="button-solbox" pButton icon="pi pi-file-o" iconPos="left" label="EXPORT.CSV"
+            (click)="dt.exportCSV()" style="margin-right: 0.5em;"></button>
+          <!-- <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()"
+            style="margin-right: 0.5em;" class="ui-button-success"></button>
+          <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()"
+            class="ui-button-warning"></button>
+          <button type="button" pButton icon="pi pi-file" iconPos="left" label="CSV - Selection Only"
+            (click)="dt.exportCSV({selectionOnly:true})" style="float:right"></button> -->
+        </div>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>

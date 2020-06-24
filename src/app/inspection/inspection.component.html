@@ -40,6 +40,20 @@
       <div class="ui-g-8">{{inspection.odometer}} km</div>
       <div class="ui-g-4">Load</div>
       <div class="ui-g-8">{{inspection.load}} t</div>
+    </div>
+    <div class="ui-g" *ngIf="inspection.axleWeights">
+      <div class="ui-g-4">Mass management</div>
+      <div class="ui-g-8"></div>
+      <div class="ui-g-4">Steer Axle</div>
+      <div class="ui-g-8">{{inspection.axleWeights[0]}} </div>
+      <div class="ui-g-4">Drive Axle</div>
+      <div class="ui-g-8">{{inspection.axleWeights[1]}} </div>
+      <div class="ui-g-4">Trailer Axle 1</div>
+      <div class="ui-g-8">{{inspection.axleWeights[2]}} </div>
+      <div class="ui-g-4">Trailer Axle 2</div>
+      <div class="ui-g-8">{{inspection.axleWeights[3]}} </div>
+    </div>
+    <div class="ui-g">
       <div class="ui-g-4">Inspection plan</div>
       <div class="ui-g-8">{{inspection.plan.title}}</div>
       <div class="ui-g-4">Result</div>

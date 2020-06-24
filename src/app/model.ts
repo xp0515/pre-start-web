@@ -13,6 +13,7 @@ export class Inspection {
   latitude: number;
   longitude: number;
   location: string;
+  axleWeights: number[];
   result: {
     item: Item;
     result: string;
