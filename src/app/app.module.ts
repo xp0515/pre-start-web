@@ -45,7 +45,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TreeModule } from 'primeng/tree';
 import { PickListModule } from 'primeng/picklist';
-
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -100,6 +100,7 @@ import { PickListModule } from 'primeng/picklist';
     OverlayPanelModule,
     TreeModule,
     PickListModule,
+    CalendarModule,
   ],
   providers: [
     ConfirmationService,

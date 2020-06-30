@@ -41,18 +41,7 @@
       <div class="ui-g-4">Load</div>
       <div class="ui-g-8">{{inspection.load}} t</div>
     </div>
-    <div class="ui-g" *ngIf="inspection.axleWeights">
-      <div class="ui-g-4">Mass management</div>
-      <div class="ui-g-8"></div>
-      <div class="ui-g-4">Steer Axle</div>
-      <div class="ui-g-8">{{inspection.axleWeights[0]}} </div>
-      <div class="ui-g-4">Drive Axle</div>
-      <div class="ui-g-8">{{inspection.axleWeights[1]}} </div>
-      <div class="ui-g-4">Trailer Axle 1</div>
-      <div class="ui-g-8">{{inspection.axleWeights[2]}} </div>
-      <div class="ui-g-4">Trailer Axle 2</div>
-      <div class="ui-g-8">{{inspection.axleWeights[3]}} </div>
-    </div>
+
     <div class="ui-g">
       <div class="ui-g-4">Inspection plan</div>
       <div class="ui-g-8">{{inspection.plan.title}}</div>
@@ -64,6 +53,9 @@
     </div>
     <mat-divider></mat-divider>
 
+    <div class="ui-g">
+      <div class="ui-g-12">Checklist</div>
+    </div>
     <div class="ui-g" *ngFor="let result of inspection.result">
       <div class="ui-g-3">
         <span *ngIf="result.result === 'Pass'">
@@ -93,6 +85,28 @@
       <div class="ui-g-3 text-right">
         {{result.duration}} sec
       </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="ui-g" *ngIf="inspection.weights">
+      <div class="ui-g-4">Mass management</div>
+      <div class="ui-g-8"></div>
+    </div>
+    <div class="ui-g" *ngFor="let weight of inspection.weights">
+      <div class="ui-g-3">
+        <span *ngIf="weight.result === 'Pass'">
+          <i class="fas fa-check-square limegreen" style="font-size: 1.4rem"></i>
+          Pass
+        </span>
+        <span *ngIf="weight.result === 'Fail'">
+          <i class="fas fa-times-circle red" style="font-size: 1.3rem"></i>
+          Fail
+        </span>
+      </div>
+      <div class="ui-g-6">{{weight.title}}</div>
+      <div class="ui-g-3 text-right">{{weight.value}} {{weight.unit}}</div>
+      <!-- <div class="ui-g-2">{{weight.unit}} </div>
+      <div class="ui-g-4"></div> -->
     </div>
     <mat-divider></mat-divider>
 

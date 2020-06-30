@@ -60,6 +60,10 @@
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
             <p-multiSelect *ngSwitchCase="'vehicle.rego'" [options]="vehicleOptions" defaultLabel="All"
               (onChange)="dt.filter($event.value, col.field, 'in')" appendTo="body"></p-multiSelect>
+            <p-calendar *ngSwitchCase="'startTime'" [(ngModel)]="rangeDates" selectionMode="range" appendTo="body"
+              (onClearClick)="dt.filter($event, col.field, 'dateRangeFilter')" showButtonBar="true"
+              [readonlyInput]="true" (onSelect)="dt.filter($event, col.field, 'dateRangeFilter')">
+            </p-calendar>
             <div *ngSwitchCase="'odometer'">
               Value > {{odometerFilter}} <i class="fa fa-close"
                 (click)="odometerFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
@@ -107,6 +111,9 @@
             {{inspection.startTime | date: 'medium'}}
           </td>
           <td>
+            {{inspection.location}}
+          </td>
+          <td>
             {{inspection.odometer}} km
           </td>
           <td>
@@ -114,6 +121,9 @@
           </td>
           <td>
             {{inspection.duration}} s
+          </td>
+          <td>
+            {{inspection.weightsResult}}
           </td>
           <td class="text-center">
             <button pButton class="button-solbox" label="View" (click)=viewInspection(inspection._id)>
@@ -136,8 +146,12 @@
       </div>
     </div>
     <!-- <p>All vehicles Drop down list</p> -->
-    <p-table [columns]="planCols" [value]="plans" [responsive]="true" [autoLayout]="true" sortMode="multiple">
+    <p-table #dt1 [columns]="planCols" [value]="plans" [responsive]="true" [autoLayout]="true" sortMode="multiple">
       <ng-template pTemplate="header" let-columns>
+        <!-- <div class="ui-helper-clearfix" style="text-align: left">
+          <button type="button" class="button-solbox" pButton icon="pi pi-file-o" iconPos="left" label="EXPORT.CSV"
+            (click)="dt1.exportCSV()" style="margin-right: 0.5em;"></button>
+        </div> -->
         <tr>
           <th class="text-center" *ngFor="let col of columns" [pSortableColumn]="col.field">
             {{col.header}}

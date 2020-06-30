@@ -13,7 +13,13 @@ export class Inspection {
   latitude: number;
   longitude: number;
   location: string;
-  axleWeights: number[];
+  weights: {
+    title: string;
+    value: number;
+    unit: string;
+    result: string;
+  }[];
+  weightsResult: string;
   result: {
     item: Item;
     result: string;
@@ -41,6 +47,7 @@ export class Plan {
   };
   lastModified: Date;
   items: [Item];
+  massPlan: MassPlan;
   client: Client;
   disabled: boolean;
 }
@@ -82,6 +89,18 @@ export class Client {
   declaration: string;
   email: string;
   mobile: string;
+}
+
+export class MassPlan {
+  _id: string;
+  title: string;
+  weights: {
+    title: string;
+    value: number;
+    unit: string;
+  }[];
+  disabled: boolean;
+  client: Client;
 }
 
 export class AuthData {

@@ -1,25 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { InspectionService } from '../inspection.service';
 import { Inspection, Vehicle, Plan, Item, User } from '../model';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
+import { FilterUtils } from 'primeng/components/utils/filterutils';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  // @ViewChild('dt', { static: false }) _table: Table;
 
   inspectionCols = [
     { field: 'plan.title', header: 'Inspection plan', width: '167px' },
     { field: 'finalStatus', header: 'Status', width: '108px' },
     { field: 'vehicle.rego', header: 'Vehicle', width: '108px' },
     { field: 'startTime', header: 'Inspection date', width: '195px' },
+    { field: 'location', header: 'Location', width: '195px' },
     { field: 'odometer', header: 'Odometer', width: '129px' },
     { field: 'performedBy', header: 'Performed by', width: '150px' },
     { field: 'duration', header: 'Duration', width: '120px' },
+    { field: 'weightsResult', header: 'Mass management', width: '200px' },
   ];
   planCols = [
     { field: 'title', header: 'Inspection plan title' },
@@ -41,11 +46,20 @@ export class HomeComponent {
   isLoading = true;
   uploadedFiles: any[] = [];
   clientId = localStorage.getItem('client');
+  rangeDates: Date[];
+  // dateRange = [];
 
   constructor(private inspectionService: InspectionService, public router: Router, private userService: UserService) { }
 
   // tslint:disable-next-line: use-life-cycle-interface
   ngOnInit() {
+    FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
+      if (this.rangeDates === null || this.rangeDates.length === 0) {
+        return true;
+      }
+      return moment(value).isBetween(moment(this.rangeDates[0]), moment(this.rangeDates[1]));
+    };
+
     this.inspectionService.getInspections(this.clientId).subscribe(inspections => {
       this.inspections = inspections;
       if (this.inspections.length) {
@@ -87,7 +101,11 @@ export class HomeComponent {
       this.driverOptions = [];
       drivers.forEach(driver => this.driverOptions.push({ label: driver.name, value: driver.name }));
     });
+
+
+
   }
+
 
   getFailCount(inspection) {
     return inspection.result.filter(r => r.result === 'Fail').length;
@@ -120,6 +138,13 @@ export class HomeComponent {
       dt.filter(event.value, 'duration', 'gt');
     }, 250);
   }
+
+  clearDateFilter() {
+    console.log(1)
+    this.rangeDates = null;
+  }
+
+
 
   // exportPdf() {
   //   import("jspdf").then(jsPDF => {

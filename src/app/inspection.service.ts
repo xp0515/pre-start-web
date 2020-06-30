@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inspection, Vehicle, Plan, Item, User } from './model';
+import { Inspection, Vehicle, Plan, Item, User, MassPlan } from './model';
 import { environment } from '../environments/environment';
 
 const url = environment.apiUrl;
@@ -30,6 +30,30 @@ export class InspectionService {
 
   deleteInspection(clientId, id) {
     return this.http.delete<Inspection>(`${url}inspections/${clientId}/${id}`);
+  }
+
+  getMassPlans(clientId) {
+    return this.http.get<MassPlan[]>(`${url}massPlans/${clientId}`);
+  }
+
+  getMassPlan(clientId, id) {
+    return this.http.get<MassPlan>(`${url}massPlans/${clientId}/${id}`);
+  }
+
+  createMassPlan(massPlan) {
+    return this.http.post<MassPlan>(`${url}massPlan`, massPlan);
+  }
+
+  updateMassPlan(clientId, id, massPlan) {
+    return this.http.put<MassPlan>(`${url}massPlans/${clientId}/${id}`, massPlan);
+  }
+
+  deleteMassPlan(clientId, id, { }) {
+    return this.http.put<MassPlan>(`${url}massPlans/${clientId}/disable/${id}`, {});
+  }
+
+  removeMassPlanFromPlan(clientId, id) {
+    return this.http.delete<any>(`${url}plans/${clientId}/removeMassPlan/${id}`);
   }
 
   getPlans(clientId) {

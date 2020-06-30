@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, FormControl, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { InspectionService } from '../inspection.service';
-import { Inspection, Vehicle, Plan, Item, User, Client } from '../model';
+import { Inspection, Vehicle, Plan, Item, User, Client, MassPlan } from '../model';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UploadService } from '../upload.service';
@@ -26,16 +26,26 @@ export class NewPlanComponent implements OnInit {
   planForm: FormGroup;
   itemForm: FormGroup;
   vehicleForm: FormGroup;
+  massPlanForm: FormGroup;
   clientId = localStorage.getItem('client');
   client: Client;
   items: Item[] = [];
   plans: Plan[] = [];
   item: Item;
+  massPlan: MassPlan;
+  massPlans: MassPlan[];
+  // weights: {
+  //   title: string;
+  //   value: number;
+  //   unit: string;
+  // }[] = [];
   editDisplay = false;
   createItemDisplay = false;
   createVehicleDisplay = false;
   editVehicleDisplay = false;
   createVehicleGroupDisplay = false;
+  createMassPlanDisplay = false;
+  editMassPlanDisplay = false;
   mode = 'create';
   planId;
   vehicleId;
@@ -43,6 +53,7 @@ export class NewPlanComponent implements OnInit {
   selectedItems = [];
   vehicles: Vehicle[] = [];
   selectedVehicles = [];
+  selectedMassPlan: MassPlan;
   selectedFrequency = '';
   selectedTime = '';
   selectedDay: number;
@@ -70,6 +81,7 @@ export class NewPlanComponent implements OnInit {
   tabIndex = 0;
   vehicleOptions: SelectItem[];
   clientOptions: SelectItem[];
+  // massPlanOptions: SelectItem[];
   data: TreeNode[] = [];
   selectedTreeVehicles: TreeNode[];
   sourceVehicleList: Vehicle[];
@@ -122,6 +134,16 @@ export class NewPlanComponent implements OnInit {
         value: client
       }));
     });
+    this.inspectionService.getMassPlans(this.clientId).subscribe(massPlans => {
+      this.massPlans = massPlans.filter(massPlan => massPlan.disabled !== true);
+      // this.massPlanOptions = [];
+      // massPlans.forEach(massPlan => {
+      //   this.massPlanOptions.push({
+      //     label: massPlan.title,
+      //     value: massPlan._id
+      //   });
+      // });
+    });
     this.planForm = this.fb.group({
       title: new FormControl('', Validators.required),
       items: new FormControl('', Validators.required),
@@ -131,6 +153,7 @@ export class NewPlanComponent implements OnInit {
         day: new FormControl('1')
       }),
       vehicles: new FormControl(''),
+      massPlan: new FormControl('', Validators.required),
       lastModified: new FormControl(Date.now()),
       client: new FormControl(''),
     });
@@ -148,6 +171,13 @@ export class NewPlanComponent implements OnInit {
       maxLoad: new FormControl(''),
       client: new FormControl(''),
     });
+    this.massPlanForm = this.fb.group({
+      title: new FormControl('', Validators.required),
+      weights: this.fb.array([
+        // this.addWeightFormGroup()
+      ]),
+      client: new FormControl(''),
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('id')) {
         this.mode = 'edit';
@@ -159,6 +189,11 @@ export class NewPlanComponent implements OnInit {
           }
           for (const vehicle of this.plan.vehicles) {
             this.selectedVehicles.push(vehicle._id);
+          }
+          if (res.massPlan) {
+            this.selectedMassPlan = res.massPlan;
+          } else {
+            this.selectedMassPlan = new MassPlan;
           }
           this.planForm.get('title').setValue(this.plan.title);
           this.planForm.get('frequency').get('type').setValue(this.plan.frequency.type);
@@ -297,9 +332,97 @@ export class NewPlanComponent implements OnInit {
       });
   }
 
+  addWeightFormGroup(): FormGroup {
+    return this.fb.group({
+      title: new FormControl('', Validators.required),
+      value: new FormControl('', Validators.required),
+      unit: new FormControl('', Validators.required),
+    });
+  }
+
+  addWeight() {
+    (<FormArray>this.massPlanForm.get('weights')).push(this.addWeightFormGroup());
+  }
+
+  removeWeight(i) {
+    (<FormArray>this.massPlanForm.get('weights')).removeAt(i);
+  }
+
+  createMassPlan() {
+    this.massPlanForm.patchValue({ client: this.client });
+    this.inspectionService.createMassPlan(this.massPlanForm.value).subscribe(res => {
+      this.massPlans.push(res);
+      this.createMassPlanDisplay = false;
+    });
+  }
+
+  editMassPlan(id) {
+    this.inspectionService.updateMassPlan(this.clientId, id, this.massPlanForm.value).subscribe(res => {
+      const index = this.massPlans.findIndex(massPlan => massPlan._id === id);
+      this.massPlans[index] = res;
+      this.editMassPlanDisplay = false;
+    });
+  }
+
+  deleteMassPlan(id) {
+    this.inspectionService.deleteMassPlan(this.clientId, id, {}).subscribe(res => {
+      this.massPlans = this.massPlans.filter(massPlan => massPlan._id !== id);
+      this.removeMassPlanFromPlan(this.clientId, id);
+    });
+  }
+
+  removeMassPlanFromPlan(clientId, id) {
+    this.inspectionService.removeMassPlanFromPlan(clientId, id).subscribe();
+  }
+
+  showUpdatedMassPlan(id) {
+    this.inspectionService.getMassPlan(this.clientId, id).subscribe(massPlan => {
+      this.massPlan = massPlan;
+      this.editMassPlanDisplay = true;
+      this.massPlanForm.get('title').setValue(this.massPlan.title);
+      this.massPlanForm.patchValue({ client: this.client });
+      this.massPlanForm.setControl('weights', this.setExistingWeights(this.massPlan.weights));
+    });
+  }
+
+  setExistingWeights(weights): FormArray {
+    const formArray = new FormArray([]);
+    weights.forEach(weight => {
+      formArray.push(this.fb.group({
+        title: weight.title,
+        value: weight.value,
+        unit: weight.unit
+      }));
+    });
+    return formArray;
+  }
+
+  confirmDeleteMassPlan(id) {
+    console.log('confirm delete mass');
+    this.confirmationService.confirm({
+      message: `Are you sure to delete this mass management plan?`,
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.deleteMassPlan(id);
+      },
+      reject: () => {
+      }
+    });
+  }
+
+  // resetRadioStatus(value) {
+  //   console.log(this.selectedMassPlan)
+  //   if (this.selectedMassPlan === value) {
+  //     console.log(1)
+  //     this.planForm.controls['massPlan'].reset();
+  //   }
+  // }
+
   createPlan() {
     this.isLoading = true;
     this.patchPlanFormValue();
+    console.log(this.planForm.value);
     this.inspectionService.createPlan(this.planForm.value).subscribe(() => {
       this.router.navigate(['']);
     });
@@ -344,7 +467,7 @@ export class NewPlanComponent implements OnInit {
 
   confirmDeletePlan(planId) {
     this.confirmationService.confirm({
-      message: `Are you sure to delete this inspection plan? (This may affect the saved inspection results.`,
+      message: `Are you sure to delete this inspection plan? (This may affect the saved inspection results.)`,
       header: 'Delete Confirmation',
       icon: 'pi pi-info-circle',
       accept: () => {
@@ -364,6 +487,11 @@ export class NewPlanComponent implements OnInit {
   showCreateVehicleDialog() {
     this.vehicleForm.reset();
     this.createVehicleDisplay = true;
+  }
+
+  showCreateMassPlanDialog() {
+    this.massPlanForm.reset();
+    this.createMassPlanDisplay = true;
   }
 
   showEditVehicleDialog(id) {
@@ -457,6 +585,12 @@ export class NewPlanComponent implements OnInit {
     event.items.forEach(item => {
       this.groupVehicleList = this.groupVehicleList.filter(vehicle => vehicle.data !== item._id);
     });
+  }
+
+  onMassPlanClose() {
+    this.massPlanForm.reset();
+    (<FormArray>this.massPlanForm.get('weights')).clear();
+    // this.addWeight();
   }
 
 }

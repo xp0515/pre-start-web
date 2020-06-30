@@ -74,6 +74,31 @@
               iconPos="left" (click)="showCreateItemDialog()">
             </button>
           </div>
+
+          <div class="p-col-12">
+            <p class="grey">Select mass management plan</p>
+            <mat-divider></mat-divider>
+            <span *ngFor="let massPlan of massPlans">
+              <div class="p-grid p-justify-between" style="padding:10px 0">
+                <div class="p-col-8">
+                  <p-radioButton formControlName="massPlan" value="{{massPlan._id}}" label="{{massPlan.title}}"
+                    [(ngModel)]="selectedMassPlan">
+                  </p-radioButton>
+                </div>
+                <div class="p-col-2 text-right">
+                  <i class="pi pi-pencil" (click)="showUpdatedMassPlan(massPlan._id)" style="cursor: pointer"></i>
+                  <i class="pi pi-times" (click)="confirmDeleteMassPlan(massPlan._id)" style="cursor: pointer"></i>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+            </span>
+          </div>
+          <div class="p-col-12 text-right">
+            <button pButton class="button-solbox" type="button" label="Add new mass management plan" icon="pi pi-plus"
+              iconPos="left" (click)="showCreateMassPlanDialog()">
+            </button>
+          </div>
+
           <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
             <div class="p-col-12">
@@ -181,6 +206,31 @@
               iconPos="left" (click)="showCreateItemDialog()">
             </button>
           </div>
+
+          <div class="p-col-12">
+            <p class="grey">Select mass management plan</p>
+            <mat-divider></mat-divider>
+            <span *ngFor="let massPlan of massPlans">
+              <div class="p-grid p-justify-between" style="padding:10px 0">
+                <div class="p-col-8">
+                  <p-radioButton formControlName="massPlan" value="{{massPlan._id}}" label="{{massPlan.title}}"
+                    [(ngModel)]="selectedMassPlan._id">
+                  </p-radioButton>
+                </div>
+                <div class="p-col-2 text-right">
+                  <i class="pi pi-pencil" (click)="showUpdatedMassPlan(massPlan._id)" style="cursor: pointer"></i>
+                  <i class="pi pi-times" (click)="confirmDeleteMassPlan(massPlan._id)" style="cursor: pointer"></i>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+            </span>
+          </div>
+          <div class="p-col-12 text-right">
+            <button pButton class="button-solbox" type="button" label="Add new mass management plan" icon="pi pi-plus"
+              iconPos="left" (click)="showCreateMassPlanDialog()">
+            </button>
+          </div>
+
           <div class="p-col-12" formGroupName="frequency">
             <p class="grey">Frequency of inspection plan</p>
             <div class="p-col-12">
@@ -396,16 +446,104 @@
         <div class="ui-g-8">
           <input type="number" pInputText formControlName="maxLoad" style="width:100%" />
         </div>
-        <div class="ui-g-4">Client</div>
+        <!-- <div class="ui-g-4">Client</div>
         <div class="ui-g-8">
           <input type="text" pInputText formControlName="client" style="width:100%" disabled />
-        </div>
+        </div> -->
       </div>
     </form>
     <p-footer>
       <div>
         <button pButton type="submit" class="button-solbox" form="editVehicleForm" label="Save"
           [disabled]="!vehicleForm.valid"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="New mass management plan" [(visible)]="createMassPlanDisplay" modal="true"
+    [style]="{width: '600px'}" (onHide)="onMassPlanClose()">
+    <form [formGroup]="massPlanForm" id="createMassPlanForm" (ngSubmit)="createMassPlan()">
+      <div class="p-grid">
+        <div class="p-col-3">Title</div>
+        <div class="p-col-9">
+          <input type="text" pInputText formControlName="title" style="width:100%">
+        </div>
+        <div class="p-col-3">Axle weights <i class="pi pi-plus" style="vertical-align: middle"
+            (click)="addWeight()"></i></div>
+        <div class="p-col-9">
+          <div formArrayName="weights" *ngFor="let weight of massPlanForm.get('weights').controls; let i = index">
+            <div [formGroupName]="i" class="p-grid p-justify-between">
+              <div class="p-col-6">
+                <input placeholder="title" style="width:100%" formControlName="title" />
+                <!-- <p-message severity="error" text="Title is required"
+                  *ngIf="!weight.get('title').valid&&weight.get('title').touched"></p-message> -->
+              </div>
+              <div class="p-col-3">
+                <input placeholder="value" style="width:100%" formControlName="value" type="number" />
+                <!-- <p-message severity="error" text="Value is required and must be a number"
+                  *ngIf="!weight.get('value').valid&&weight.get('value').touched"></p-message> -->
+              </div>
+              <div class="p-col-2">
+                <input placeholder="unit" style="width:100%" formControlName="unit" />
+                <!-- <p-message severity="error" text="Unit is required"
+                  *ngIf="!weight.get('unit').valid&&weight.get('unit').touched"></p-message> -->
+              </div>
+              <div class="p-col-1">
+                <i class="pi pi-times" style="vertical-align: middle" (click)="removeWeight(i)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <p-footer>
+      <div>
+        <button pButton type="submit" class="button-solbox" form="createMassPlanForm" label="Save"
+          [disabled]="massPlanForm.invalid||massPlanForm.get('weights').controls.length===0"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="Edit mass management plan" [(visible)]="editMassPlanDisplay" modal="true" [style]="{width: '600px'}"
+    (onHide)="onMassPlanClose()">
+    <form [formGroup]="massPlanForm" id="editMassPlanForm" (ngSubmit)="editMassPlan(massPlan._id)">
+      <div class="p-grid">
+        <div class="p-col-3">Title</div>
+        <div class="p-col-9">
+          <input type="text" pInputText formControlName="title" style="width:100%">
+        </div>
+        <div class="p-col-3">Axle weights <i class="pi pi-plus" style="vertical-align: middle"
+            (click)="addWeight()"></i></div>
+        <div class="p-col-9">
+          <div formArrayName="weights" *ngFor="let weight of massPlanForm.get('weights').controls; let i = index">
+            <div [formGroupName]="i" class="p-grid p-justify-between">
+              <div class="p-col-6">
+                <input placeholder="title" style="width:100%" formControlName="title" />
+                <!-- <p-message severity="error" text="Title is required"
+                  *ngIf="!weight.get('title').valid&&weight.get('title').touched"></p-message> -->
+              </div>
+              <div class="p-col-3">
+                <input placeholder="value" style="width:100%" formControlName="value" type="number" />
+                <!-- <p-message severity="error" text="Value is required and must be a number"
+                  *ngIf="!weight.get('value').valid&&weight.get('value').touched"></p-message> -->
+              </div>
+              <div class="p-col-2">
+                <input placeholder="unit" style="width:100%" formControlName="unit" />
+                <!-- <p-message severity="error" text="Unit is required"
+                  *ngIf="!weight.get('unit').valid&&weight.get('unit').touched"></p-message> -->
+              </div>
+              <div class="p-col-1">
+                <i class="pi pi-times" style="vertical-align: middle" (click)="removeWeight(i)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <p-footer>
+      <div>
+        <button pButton type="submit" class="button-solbox" form="editMassPlanForm" label="Save"
+          [disabled]="massPlanForm.invalid||massPlanForm.get('weights').controls.length===0"></button>
       </div>
     </p-footer>
   </p-dialog>

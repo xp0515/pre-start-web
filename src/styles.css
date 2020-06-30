@@ -130,3 +130,7 @@ body p-fileupload .ui-button {
   background: #472F91 !important;
   border: 1px solid #472F91 !important;
 }
+
+.ui-calendar .ui-datepicker {
+  width: 400px;
+}
